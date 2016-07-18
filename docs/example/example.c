@@ -10,7 +10,7 @@ void exit_clicked(sui_t *button, sui_event_t *event) {
 
 int main(int argc, char **argv) {
 	init_sui();
-	sui_t *window = sui_load("window.sui");
+	sui_t *window = sui_load_sui("window.sui");
 	sui_css_t *css = sui_load_css("window.css");
 	sui_add_handler(window, exit_clicked);
 	sui_add_handler(window, say_hi_clicked);
