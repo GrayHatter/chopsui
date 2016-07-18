@@ -1,11 +1,18 @@
 #include <chopsui.h>
 
-void say_hi_clicked(sui_t *button, sui_event_t *event) {
+void say_hi_clicked(sui_t *source, sui_event_t *event) {
 	sui_alert("Hello world!");
 }
 
-void exit_clicked(sui_t *button, sui_event_t *event) {
+void exit_clicked(sui_t *source, sui_event_t *event) {
 	sui_exit();
+}
+
+void add_thing_clicked(sui_t *source, sui_event_t *event) {
+	sui_t *window = sui_find_anscestor(source, "window"); // CSS selector
+	sui_t *container = sui_find_descendant(window, "main-container");
+	sui_t *new_text = sui_parse_sui("label text='New Text'");
+	sui_add_child(container, new_text);
 }
 
 int main(int argc, char **argv) {
