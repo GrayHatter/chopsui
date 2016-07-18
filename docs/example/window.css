@@ -1,0 +1,15 @@
+#main-window {
+    background: #cccccc;
+}
+
+.heading {
+    font-size: 18pt;
+}
+
+button {
+    transition: background 1s linear;
+}
+
+button:hover {
+    background: #00FF00;
+}

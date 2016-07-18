@@ -1,0 +1,11 @@
+# vim: ts=2 sw=2 et
+window @main-window title="chopsui example"
+  container orientation=vertical
+    label .heading text="Hello World!"
+    button clicked=say_hi_clicked
+      label text="Say hi"
+    button {
+      clicked=exit_clicked
+      background="#FF0000"
+    }
+      label text="Exit"
