@@ -1,7 +1,9 @@
 # vim: ts=2 sw=2 et
 window @main-window title='chopsui example'
+# @main-window is shorthand for id='main-window'
   container @main-container orientation=vertical
     label .heading text='Hello World!'
+    # .heading is shorthand for class='heading'
     button clicked=say_hi_clicked
       label text='Say hi'
     button [
