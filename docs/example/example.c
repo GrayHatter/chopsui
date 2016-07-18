@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
 	sui_css_t *css = sui_load_css("window.css");
 	sui_add_handler(window, exit_clicked);
 	sui_add_handler(window, say_hi_clicked);
+	sui_add_handler(window, add_thing_clicked);
 	sui_style(window, css);
 	sui_show(window);
 	sui_run();
