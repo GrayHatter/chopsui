@@ -1,30 +1,10 @@
 #ifndef _SUI_TREE_H
 #define _SUI_TREE_H
 
-#include "Yoga.h"
-#include "bloom.h"
-#include "hashtable.h"
 #include "list.h"
-#include "set.h"
+#include "node.h"
 #include "elements.h"
 #include "css.h"
-
-struct sui_node {
-	YGNodeRef layout_node;
-	struct sui_node *parent;
-
-	char *id;
-	set_t classes;				// char *
-	list_t children;			// sui_node_t
-	hashtable_t attributes; 	// char *, char *
-
-	void *impl_state;
-	sui_elem_impl_t elem_impl;
-
-	bloom_t ancestors;
-};
-
-typedef struct sui_node *sui_node_t;
 
 /**
  * Finds the first ancestor of node that matches the provided CSS selector.
@@ -69,11 +49,5 @@ void sui_insert_child(sui_node_t parent, sui_node_t child, int index);
  * Detaches this node from its parent.
  */
 void sui_detach(sui_node_t child);
-
-/**
- * Frees this node and all of its children. Detaches it from the parent first if
- * necessary.
- */
-void sui_free_node(sui_node_t node);
 
 #endif

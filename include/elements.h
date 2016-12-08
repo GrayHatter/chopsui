@@ -1,7 +1,7 @@
 #ifndef _SUI_ELEMENTS_H
 #define _SUI_ELEMENTS_H
 
-#include "tree.h"
+#include "node.h"
 #include "bloom.h"
 #include "hashtable.h"
 #include "list.h"

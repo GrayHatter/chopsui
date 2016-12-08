@@ -6,23 +6,23 @@
 #include "hashtable.h"
 
 enum selector_type {
-	SELECTOR_TYPE,				// type
-	SELECTOR_ID,				// #id
-	SELECTOR_CLASS,				// .class
-	SELECTOR_ATTRIBUTE,			// [...]
-	SELECTOR_CHILD,				// >
-	SELECTOR_SIBLING,			// ~
-	SELECTOR_NEXT_SIBLING,		// +
+	SELECTOR_TYPE,         // type
+	SELECTOR_ID,           // #id
+	SELECTOR_CLASS,        // .class
+	SELECTOR_ATTRIBUTE,    // [...]
+	SELECTOR_CHILD,        // >
+	SELECTOR_SIBLING,      // ~
+	SELECTOR_NEXT_SIBLING, // +
 };
 
 enum attribute_comparison {
-	ATTR_EXISTS,			// [attr] matches attr="*"
-	ATTR_EQUALS,			// [attr=value] matches attr="word"
-	ATTR_WORD,				// [attr~=word] matches attr="x x word x x"
-	ATTR_EQUALS_OR_DASH,	// [attr|=word] matches attr="word" or attr="word-*"
-	ATTR_PREFIX,			// [attr^=prefix] matches attr="prefix*"
-	ATTR_SUFFIX,			// [attr$=suffix] matches attr="*suffix"
-	ATTR_CONTAINS,			// [attr*=match] matches attr="*match*"
+	ATTR_EXISTS,         // [attr] matches attr="*"
+	ATTR_EQUALS,         // [attr=value] matches attr="word"
+	ATTR_WORD,           // [attr~=word] matches attr="x x word x x"
+	ATTR_EQUALS_OR_DASH, // [attr|=word] matches attr="word" or attr="word-*"
+	ATTR_PREFIX,         // [attr^=prefix] matches attr="prefix*"
+	ATTR_SUFFIX,         // [attr$=suffix] matches attr="*suffix"
+	ATTR_CONTAINS,       // [attr*=match] matches attr="*match*"
 };
 
 struct selector {
