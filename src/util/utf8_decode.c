@@ -13,6 +13,12 @@ uint8_t masks[] = {
 
 uint32_t utf8_decode(const char **s) {
 	uint32_t cp = 0;
+	if (**s < 0x80) {
+		// shortcut
+		cp = **s;
+		++*s;
+		return cp;
+	}
 	int size = utf8_size(*s);
 	if (size == -1) {
 		return UTF8_INVALID;

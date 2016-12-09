@@ -6,7 +6,6 @@
 #include "util/hashtable.h"
 
 enum selector_type {
-	SELECTOR_INVALID,      // for internal use
 	SELECTOR_TYPE,         // type
 	SELECTOR_ID,           // #id
 	SELECTOR_CLASS,        // .class
