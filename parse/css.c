@@ -19,7 +19,7 @@ static bool parse_selector_atom(selector_t current, const char **src) {
 		return false;
 	}
 	char *atom = malloc(16);
-	int len = 0;
+	size_t len = 0, size = 16;
 	while (*src) {
 		uint32_t ch = utf8_decode(src);
 		if (ch == UTF8_INVALID) {
@@ -28,6 +28,15 @@ static bool parse_selector_atom(selector_t current, const char **src) {
 		switch (ch) {
 			default:
 				if (!isspace(ch)) {
+					if (size - len > UTF8_MAX_SIZE + 1) {
+						size *= 2;
+						char *new = realloc(atom, size);
+						if (!new) {
+							free(atom);
+							return false;
+						}
+						atom = new;
+					}
 					len += utf8_encode(atom + len, ch);
 					break;
 				}
