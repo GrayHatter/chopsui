@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 #include "util/unicode.h"
 #include "css.h"
@@ -76,7 +77,7 @@ selector_t selector_parse(const char *src) {
 				while (isspace(ch)) {
 					ch = utf8_decode(&src);
 				}
-				if (*src) {
+				if (*src && !strchr(">~+", ch)) {
 					current->next = calloc(sizeof(struct selector), 1);
 					prev = current;
 					current = current->next;
@@ -86,12 +87,24 @@ selector_t selector_parse(const char *src) {
 		switch (ch) {
 			case '>':
 				current->type = SELECTOR_CHILD;
+				do {
+					ch = utf8_decode(&src);
+				} while (isspace(ch));
+				src -= utf8_chsize(ch);
 				break;
 			case '~':
 				current->type = SELECTOR_SIBLING;
+				do {
+					ch = utf8_decode(&src);
+				} while (isspace(ch));
+				src -= utf8_chsize(ch);
 				break;
 			case '+':
 				current->type = SELECTOR_NEXT_SIBLING;
+				do {
+					ch = utf8_decode(&src);
+				} while (isspace(ch));
+				src -= utf8_chsize(ch);
 				break;
 			case '[': // TODO: attribute selectors
 				while (*src && *src != ']') ++src;
