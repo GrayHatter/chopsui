@@ -50,6 +50,17 @@ static int test_descendants() {
 	return 0;
 }
 
+static int test_pairs() {
+	selector_t selector = selector_parse("foo.bar");
+	assert(selector->type == SELECTOR_TYPE);
+	assert(strcmp(selector->value, "foo") == 0);
+	assert(selector->next);
+	assert(selector->next->type == SELECTOR_CLASS);
+	assert(strcmp(selector->next->value, "bar") == 0);
+	selector_destroy(selector);
+	return 0;
+}
+
 static int test_child() {
 	selector_t selector = selector_parse("foo > .bar");
 	assert(selector->type == SELECTOR_TYPE);
@@ -97,6 +108,7 @@ int test_main() {
 		|| test_basic_class()
 		|| test_basic_id()
 		|| test_descendants()
+		|| test_pairs()
 		|| test_child()
 		|| test_sibling()
 		|| test_next_sibling()
