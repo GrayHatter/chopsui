@@ -2,10 +2,6 @@
 #define _SUI_ELEMENTS_H
 
 #include "node.h"
-#include "bloom.h"
-#include "hashtable.h"
-#include "list.h"
-#include "set.h"
 
 struct sui_elem_impl {
 	void (*free)(sui_node_t node);

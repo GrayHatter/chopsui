@@ -3,10 +3,10 @@
 
 #include <stdbool.h>
 #include "Yoga.h"
-#include "bloom.h"
-#include "hashtable.h"
-#include "list.h"
-#include "set.h"
+#include "util/bloom.h"
+#include "util/hashtable.h"
+#include "util/list.h"
+#include "util/set.h"
 
 struct sui_node {
 	YGNodeRef layout_node;
@@ -28,29 +28,29 @@ typedef struct sui_node *sui_node_t;
 /**
  * Returns the value of the specified attribute.
  */
-const char *sui_get_attr(sui_node_t node, const char *key);
+const char *node_get_attr(sui_node_t node, const char *key);
 /**
  * Sets the specified attribute to the specified value.
  */
-void sui_set_attr(sui_node_t node, const char *key, const char *value);
+void node_set_attr(sui_node_t node, const char *key, const char *value);
 
 /**
  * Checks if the specified node has the specified class.
  */
-bool sui_has_class(sui_node_t node, const char *name);
+bool node_has_class(sui_node_t node, const char *name);
 /**
  * Adds the specified class to the specified node.
  */
-void sui_add_class(sui_node_t node, const char *name);
+void node_add_class(sui_node_t node, const char *name);
 /**
  * Removes the specified class to the specified node.
  */
-void sui_remove_class(sui_node_t node, const char *name);
+void node_remove_class(sui_node_t node, const char *name);
 
 /**
  * Frees this node and all of its children. Detaches it from the parent first if
  * necessary.
  */
-void sui_free_node(sui_node_t node);
+void node_free_node(sui_node_t node);
 
 #endif

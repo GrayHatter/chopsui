@@ -2,10 +2,11 @@
 #define _SUI_CSS_H
 
 #include <stdio.h>
-#include "list.h"
-#include "hashtable.h"
+#include "util/list.h"
+#include "util/hashtable.h"
 
 enum selector_type {
+	SELECTOR_INVALID,      // for internal use
 	SELECTOR_TYPE,         // type
 	SELECTOR_ID,           // #id
 	SELECTOR_CLASS,        // .class
@@ -36,7 +37,17 @@ struct selector {
 	char *attr_value;
 };
 
-void parse_selector(const char *source, struct selector *value);
+typedef struct selector *selector_t;
+
+/**
+ * Parses a selector string and returns a new selector.
+ */
+selector_t selector_parse(const char *source);
+
+/**
+ * Frees a selector.
+ */
+void selector_destroy(selector_t selector);
 
 struct style_property {
 	char *name;
@@ -60,7 +71,7 @@ struct stylesheet {
 
 typedef struct stylesheet stylesheet_t;
 
-stylesheet_t *parse_stylesheet(const char *source);
-stylesheet_t *parse_stylesheet_f(FILE *source);
+stylesheet_t *stylesheet_parse(const char *source);
+stylesheet_t *stylesheet_parsef(FILE *source);
 
 #endif
