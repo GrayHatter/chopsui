@@ -1,7 +1,6 @@
-ARCHIVES+=util/util.a
+ARCHIVES+= util/util.a
 
-OBJECTS=\
-		util/hashtable.o \
+OBJECTS=util/hashtable.o \
 		util/list.o \
 		util/set.o \
 		util/utf8_chsize.o \
@@ -10,4 +9,6 @@ OBJECTS=\
 		util/utf8_size.o
 
 util/util.a: $(OBJECTS)
-	$(AR) $(ARFLAGS) $@ $<
+	$(AR) $(ARFLAGS) $@ $?
+
+UTIL_LIBS=util/util.a

@@ -1,7 +1,8 @@
-ARCHIVES+=parse/parse.a
+ARCHIVES+= parse/parse.a
 
-OBJECTS=\
-		parse/css.o
+OBJECTS=parse/css.o
 
 parse/parse.a: $(OBJECTS)
-	$(AR) $(ARFLAGS) $@ $<
+	$(AR) $(ARFLAGS) $@ $?
+
+PARSE_LIBS=parse/parse.a

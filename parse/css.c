@@ -15,20 +15,21 @@ void selector_destroy(selector_t selector) {
 }
 
 static bool parse_selector_atom(selector_t current, const char **src) {
-	if (!*src) {
+	if (!*src || !**src) {
 		return false;
 	}
 	char *atom = malloc(16);
 	size_t len = 0, size = 16;
-	while (*src) {
+	while (**src) {
 		uint32_t ch = utf8_decode(src);
 		if (ch == UTF8_INVALID) {
-			break;
+			free(atom);
+			return false;
 		}
 		switch (ch) {
 			default:
 				if (!isspace(ch)) {
-					if (size - len > UTF8_MAX_SIZE + 1) {
+					if (size - len < UTF8_MAX_SIZE + 1) {
 						size *= 2;
 						char *new = realloc(atom, size);
 						if (!new) {
@@ -47,28 +48,40 @@ static bool parse_selector_atom(selector_t current, const char **src) {
 			case '>':
 			case '~':
 			case '+':
-				current->value = atom;
-				src -= utf8_chsize(ch);
-				return true;
+				*src -= utf8_chsize(ch);
+				goto finish;
 		}
 	}
-	free(atom);
-	return false;
+finish:
+	atom[len] = '\0';
+	current->value = atom;
+	return true;
 }
 
-selector_t parse_selector(const char *src) {
+selector_t selector_parse(const char *src) {
 	if (!*src) {
 		return NULL;
 	}
 	selector_t current = calloc(sizeof(struct selector), 1);
 	selector_t root = current;
+	selector_t prev = NULL;
 	while (*src) {
 		uint32_t ch = utf8_decode(&src);
 		if (ch == UTF8_INVALID) {
 			goto error;
 		}
 		if (isspace(ch)) {
-			continue;
+			if (current != root) {
+				current->type = SELECTOR_DESCENDANT;
+				while (isspace(ch)) {
+					ch = utf8_decode(&src);
+				}
+				if (*src) {
+					current->next = calloc(sizeof(struct selector), 1);
+					prev = current;
+					current = current->next;
+				}
+			}
 		}
 		switch (ch) {
 			case '>':
@@ -85,28 +98,34 @@ selector_t parse_selector(const char *src) {
 				if (*src) ++src;
 				continue;
 			case '#':
-				++src;
 				current->type = SELECTOR_ID;
 				if (!parse_selector_atom(current, &src)) {
 					goto error;
 				}
 				break;
 			case '.':
-				++src;
-				current->type = SELECTOR_ID;
+				current->type = SELECTOR_CLASS;
 				if (!parse_selector_atom(current, &src)) {
 					goto error;
 				}
 				break;
 			default:
+				src -= utf8_chsize(ch);
 				current->type = SELECTOR_TYPE;
 				if (!parse_selector_atom(current, &src)) {
 					goto error;
 				}
 				break;
 		}
-		current->next = calloc(sizeof(struct selector), 1);
-		current = current->next;
+		if (*src) {
+			current->next = calloc(sizeof(struct selector), 1);
+			prev = current;
+			current = current->next;
+		}
+	}
+	if (current->type == SELECTOR_DESCENDANT) {
+		selector_destroy(current);
+		current = prev;
 	}
 	return root;
 error:

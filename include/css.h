@@ -10,6 +10,7 @@ enum selector_type {
 	SELECTOR_ID,           // #id
 	SELECTOR_CLASS,        // .class
 	SELECTOR_ATTRIBUTE,    // [...]
+	SELECTOR_DESCENDANT,   // (whitespace)
 	SELECTOR_CHILD,        // >
 	SELECTOR_SIBLING,      // ~
 	SELECTOR_NEXT_SIBLING, // +
