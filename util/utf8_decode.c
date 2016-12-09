@@ -13,7 +13,7 @@ uint8_t masks[] = {
 
 uint32_t utf8_decode(const char **s) {
 	uint32_t cp = 0;
-	if (**s < 0x80) {
+	if (**s < 0) {
 		// shortcut
 		cp = **s;
 		++*s;
