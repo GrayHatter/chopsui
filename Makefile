@@ -1,17 +1,7 @@
-# Defaults
-CC=cc
-_CFLAGS=-Wall -Wextra -Werror -Wno-unused-parameter \
-		-std=c11 -Iinclude/ -fPIC
-CFLAGS?=-g
-LD=ld
-LDFLAGS=
-AR=ar
-ARFLAGS=srv
-
-# User settings
 sinclude config.mk
 
-CFLAGS:=$(_CFLAGS) $(CFLAGS)
+CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter \
+	-std=c11 -Iinclude/ -fPIC $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c -o $@ $(INCLUDE) $(CFLAGS) $<
