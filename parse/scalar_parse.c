@@ -33,6 +33,13 @@ bool scalar_parse(const char *s, sui_scalar_t *scalar) {
 		{ "rem", SCALAR_FLOAT, SCALAR_REM },
 		{ "px", SCALAR_INT, SCALAR_PX },
 		{ "%", SCALAR_FLOAT, SCALAR_PERCENT },
+		{ "deg", SCALAR_FLOAT, SCALAR_DEG },
+		{ "rad", SCALAR_FLOAT, SCALAR_RAD },
+		{ "grad", SCALAR_FLOAT, SCALAR_GRAD },
+		{ "ms", SCALAR_FLOAT, SCALAR_MS },
+		{ "s", SCALAR_FLOAT, SCALAR_S },
+		{ "hz", SCALAR_FLOAT, SCALAR_HZ },
+		{ "khz", SCALAR_FLOAT, SCALAR_KHZ },
 	};
 	for (size_t i = 0; i < sizeof(maps) / sizeof(struct type_map); ++i) {
 		if (strcasecmp(maps[i].str, unit) == 0) {

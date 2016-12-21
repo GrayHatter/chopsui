@@ -12,6 +12,14 @@ enum scalar_type {
 	SCALAR_REM,
 	SCALAR_PX,
 	SCALAR_PERCENT,
+	SCALAR_DEG,
+	SCALAR_RAD,
+	SCALAR_GRAD,
+	SCALAR_MS,
+	SCALAR_S,
+	SCALAR_HZ,
+	SCALAR_KHZ,
+	SCALAR_COLOR,
 };
 
 struct sui_scalar {
