@@ -3,7 +3,7 @@
 #include "test.h"
 #include "css.h"
 
-char *test_name = "parse/parse_selector";
+char *test_name = "parse/selector_parse";
 
 static int test_basic_type() {
 	selector_t selector = selector_parse("test");

@@ -3,7 +3,7 @@
 #include "test.h"
 #include "scalars.h"
 
-char *test_name = "parse/parse_scalar";
+char *test_name = "parse/scalar_parse";
 
 static int test_unitless_int() {
 	sui_scalar_t scalar;
