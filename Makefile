@@ -21,6 +21,7 @@ clean:
 	find . -name "*.o" -delete
 	find . -name "*.a" -delete
 	find . -name "*.so" -delete
+	find test/ -type f -executable -delete
 
 include test/Makefile
 

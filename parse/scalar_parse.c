@@ -37,16 +37,17 @@ bool scalar_parse(const char *s, sui_scalar_t *scalar) {
 	for (size_t i = 0; i < sizeof(maps) / sizeof(struct type_map); ++i) {
 		if (strcasecmp(maps[i].str, unit) == 0) {
 			if (scalar->type == SCALAR_FLOAT && maps[i].base == SCALAR_INT) {
-				// Specified a float where an int was expected
+				// Not allowed to demote float to int
 				return false;
 			}
 			if (scalar->type == SCALAR_INT && maps[i].base == SCALAR_FLOAT) {
-				// Convert int to float
+				// Promote int to float
 				scalar->fval = (float)scalar->ival;
 			}
 			scalar->type = maps[i].type;
 			return true;
 		}
 	}
+	// Invalid unit
 	return false;
 }

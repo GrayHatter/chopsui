@@ -42,6 +42,10 @@ void list_add(list_t *list, void *item) {
 	list->items[list->length++] = item;
 }
 
+void list_push(list_t *list, void *item) {
+	list_add(list, item);
+}
+
 void list_insert(list_t *list, size_t index, void *item) {
 	list_resize(list);
 	memmove(&list->items[index + 1], &list->items[index], sizeof(void*) * (list->length - index));
@@ -52,6 +56,16 @@ void list_insert(list_t *list, size_t index, void *item) {
 void list_del(list_t *list, size_t index) {
 	list->length--;
 	memmove(&list->items[index], &list->items[index + 1], sizeof(void*) * (list->length - index));
+}
+
+void *list_pop(list_t *list) {
+	void *_ = list->items[list->length - 1];
+	list_del(list, list->length - 1);
+	return _;
+}
+
+void *list_peek(list_t *list) {
+	return list->items[list->length - 1];
 }
 
 void list_cat(list_t *list, list_t *source) {

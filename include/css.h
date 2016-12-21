@@ -119,5 +119,6 @@ typedef struct stylesheet stylesheet_t;
 
 stylesheet_t *stylesheet_parse(const char *source);
 stylesheet_t *stylesheet_parsef(FILE *source);
+void stylesheet_free(stylesheet_t *stylesheet);
 
 #endif

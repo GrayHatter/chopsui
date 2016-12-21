@@ -13,8 +13,11 @@ list_t *list_create(void);
 void list_destroy(list_t *list);
 void list_foreach(list_t *list, void (*callback)(void* item));
 void list_add(list_t *list, void *item);
+void list_push(list_t *list, void *item);
 void list_insert(list_t *list, size_t index, void *item);
 void list_del(list_t *list, size_t index);
+void *list_pop(list_t *list);
+void *list_peek(list_t *list);
 void list_cat(list_t *list, list_t *source);
 // See qsort. Remember to use *_qsort functions as compare functions,
 // because they dereference the left and right arguments first!
