@@ -1,6 +1,7 @@
 ARCHIVES+= parse/parse.a
 
-OBJECTS=parse/css.o
+OBJECTS=parse/selector_destroy.o \
+		parse/selector_parse.o
 
 parse/parse.a: $(OBJECTS)
 	$(AR) $(ARFLAGS) $@ $?

@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
 	printf("%s", test_name);
-	int dots = 60 - strlen(test_name);
+	int dots = 50 - strlen(test_name);
 	while (dots--) putchar('.');
 	int ret = test_main();
 	if (ret) {
