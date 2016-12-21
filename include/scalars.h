@@ -2,6 +2,7 @@
 #define _SUI_SCALARS_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 enum scalar_type {
 	SCALAR_INT,
@@ -16,13 +17,13 @@ enum scalar_type {
 struct sui_scalar {
 	enum scalar_type type;
 	union {
-		double dval;
+		double fval;
 		long ival;
 	};
 };
 
 typedef struct sui_scalar sui_scalar_t;
 
-bool parse_scalar(const char *s, sui_scalar_t *scalar);
+bool scalar_parse(const char *s, sui_scalar_t *scalar);
 
 #endif

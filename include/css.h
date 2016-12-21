@@ -98,7 +98,7 @@ struct media_rule {
 typedef struct media_rule media_rule_t;
 
 struct keyframe {
-	scalar_t at;
+	sui_scalar_t at;
 	list_t *rules;
 };
 
