@@ -6,7 +6,8 @@ OBJECTS=util/hashtable.o \
 		util/utf8_chsize.o \
 		util/utf8_decode.o \
 		util/utf8_encode.o \
-		util/utf8_size.o
+		util/utf8_size.o \
+		util/get_named_color.o
 
 util/util.a: $(OBJECTS)
 	$(AR) $(ARFLAGS) $@ $?

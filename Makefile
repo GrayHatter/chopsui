@@ -26,7 +26,7 @@ clean:
 include test/Makefile
 
 check: $(TESTS)
-	find test/ -type f -executable -exec \{\} \;
+	@find test/ -type f -executable -exec \{\} \;
 
 .PHONY: all clean check
 

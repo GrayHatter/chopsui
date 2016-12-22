@@ -1,5 +1,6 @@
 CC=cc
 CFLAGS=-g
+CPP=cpp
 LD=ld
 LDFLAGS=
 AR=ar
