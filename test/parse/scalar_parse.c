@@ -65,6 +65,17 @@ static int test_named_colors() {
 	return 0;
 }
 
+static int test_hex_colors() {
+	sui_scalar_t scalar;
+	assert(scalar_parse("#123456", &scalar));
+	assert(scalar.uval == 0x123456FF);
+	assert(scalar.r == 0x12 && scalar.g == 0x34);
+	assert(scalar.b == 0x56 && scalar.a == 0xFF);
+	assert(scalar_parse("#12345678", &scalar));
+	assert(scalar.uval == 0x12345678);
+	return 0;
+}
+
 int test_main() {
 	return test_unitless_int()
 		|| test_unitless_float()
@@ -73,5 +84,6 @@ int test_main() {
 		|| test_float_demotion()
 		|| test_error_cases()
 		|| test_named_colors()
+		|| test_hex_colors()
 	;
 }
