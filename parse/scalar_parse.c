@@ -27,6 +27,10 @@ static bool parse_color(const char *str, uint32_t *val) {
 		return false; // TODO
 	} else if (strncmp(str, "rgb(", 4) == 0) {
 		return false; // TODO
+	} else if (strncmp(str, "hsla(", 5) == 0) {
+		return false; // TODO
+	} else if (strncmp(str, "hsl(", 4) == 0) {
+		return false; // TODO
 	} else if (*str == '#') {
 		return parse_hex_color(str, val);
 	}
