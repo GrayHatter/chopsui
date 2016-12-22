@@ -172,6 +172,6 @@ bool get_named_color(const char *name, uint32_t *color) {
 	if (!res) {
 		return false;
 	}
-	*color = res->color | 0xFF000000;
+	*color = (res->color << 8) | 0xFF;
 	return true;
 }

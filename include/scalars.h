@@ -28,8 +28,8 @@ struct sui_scalar {
 		double fval;
 		long ival;
 		unsigned long uval;
-		union {
-			uint8_t r, g, b, a;
+		struct {
+			uint8_t a, b, g, r;
 		};
 	};
 };

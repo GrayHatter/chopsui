@@ -55,6 +55,16 @@ static int test_error_cases() {
 	return 0;
 }
 
+static int test_named_colors() {
+	sui_scalar_t scalar;
+	assert(scalar_parse("black", &scalar));
+	assert(scalar.uval == 0x000000FF);
+	assert(scalar.r == 0x00 && scalar.a == 0xFF);
+	assert(scalar_parse("white", &scalar));
+	assert(scalar.uval == 0xFFFFFFFF);
+	return 0;
+}
+
 int test_main() {
 	return test_unitless_int()
 		|| test_unitless_float()
@@ -62,5 +72,6 @@ int test_main() {
 		|| test_int_promotion()
 		|| test_float_demotion()
 		|| test_error_cases()
+		|| test_named_colors()
 	;
 }
