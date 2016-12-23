@@ -1,8 +1,8 @@
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <string.h>
-#include "internal/colors.h"
+#include "scalars.h"
 
 struct named_color {
 	const char *name;
@@ -164,7 +164,7 @@ static int color_cmp(const void *_a, const void *_b) {
 	return strcmp(a->name, b->name);
 }
 
-bool get_named_color(const char *name, uint32_t *color) {
+static bool get_named_color(const char *name, uint32_t *color) {
 	struct named_color key = { name, 0 };
 	struct named_color *res = bsearch(&key,
 		&colors, sizeof(colors) / sizeof(colors[0]),
@@ -174,4 +174,35 @@ bool get_named_color(const char *name, uint32_t *color) {
 	}
 	*color = (res->color << 8) | 0xFF;
 	return true;
+}
+
+static bool parse_hex_color(const char *str, uint32_t *val) {
+	int len = strlen(str);
+	if (len != 7 && len != 9) {
+		return false;
+	}
+	char *end;
+	*val = strtoul(str + 1, &end, 16);
+	if (*end) {
+		return false;
+	}
+	if (len == 7) {
+		*val = (*val << 8) | 0xFF;
+	}
+	return true;
+}
+
+bool color_parse(const char *str, uint32_t *val) {
+	if (strncmp(str, "rgba(", 5) == 0) {
+		return false; // TODO
+	} else if (strncmp(str, "rgb(", 4) == 0) {
+		return false; // TODO
+	} else if (strncmp(str, "hsla(", 5) == 0) {
+		return false; // TODO
+	} else if (strncmp(str, "hsl(", 4) == 0) {
+		return false; // TODO
+	} else if (*str == '#') {
+		return parse_hex_color(str, val);
+	}
+	return get_named_color(str, val);
 }

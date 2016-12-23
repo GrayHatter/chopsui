@@ -36,6 +36,14 @@ struct sui_scalar {
 
 typedef struct sui_scalar sui_scalar_t;
 
+/**
+ * Parses a CSS scalar string into a sui_scalar_t
+ */
 bool scalar_parse(const char *s, sui_scalar_t *scalar);
+
+/**
+ * Parses a CSS color string into a uint32_t
+ */
+bool color_parse(const char *str, uint32_t *val);
 
 #endif

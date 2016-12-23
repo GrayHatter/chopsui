@@ -3,39 +3,7 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
-#include "internal/colors.h"
 #include "scalars.h"
-
-static bool parse_hex_color(const char *str, uint32_t *val) {
-	int len = strlen(str);
-	if (len != 7 && len != 9) {
-		return false;
-	}
-	char *end;
-	*val = strtoul(str + 1, &end, 16);
-	if (*end) {
-		return false;
-	}
-	if (len == 7) {
-		*val = (*val << 8) | 0xFF;
-	}
-	return true;
-}
-
-static bool parse_color(const char *str, uint32_t *val) {
-	if (strncmp(str, "rgba(", 5) == 0) {
-		return false; // TODO
-	} else if (strncmp(str, "rgb(", 4) == 0) {
-		return false; // TODO
-	} else if (strncmp(str, "hsla(", 5) == 0) {
-		return false; // TODO
-	} else if (strncmp(str, "hsl(", 4) == 0) {
-		return false; // TODO
-	} else if (*str == '#') {
-		return parse_hex_color(str, val);
-	}
-	return get_named_color(str, val);
-}
 
 bool scalar_parse(const char *s, sui_scalar_t *scalar) {
 	char *unit;
@@ -48,7 +16,7 @@ bool scalar_parse(const char *s, sui_scalar_t *scalar) {
 	}
 	if (unit == s) {
 		uint32_t color;
-		bool valid = parse_color(s, &color);
+		bool valid = color_parse(s, &color);
 		scalar->uval = color;
 		scalar->type = SCALAR_COLOR;
 		return valid;
