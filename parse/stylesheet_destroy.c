@@ -56,27 +56,21 @@ static void keyframes_destroy(keyframes_t *keyframes) {
 }
 
 void stylesheet_destroy(stylesheet_t *css) {
-	if (!css) {
-		return;
-	}
-
+	if (!css) return;
 	for (size_t i = 0; i < css->rules->length; ++i) {
 		style_rule_t *rule = css->rules->items[i];
 		style_rule_destroy(rule);
 	}
 	list_destroy(css->rules);
-
 	for (size_t i = 0; i < css->media_rules->length; ++i) {
 		media_rule_t *rule = css->media_rules->items[i];
 		media_rule_destroy(rule);
 	}
 	list_destroy(css->media_rules);
-
 	for (size_t i = 0; i < css->keyframes->length; ++i) {
 		keyframes_t *keyframes = css->keyframes->items[i];
 		keyframes_destroy(keyframes);
 	}
 	list_destroy(css->keyframes);
-
 	free(css);
 }
