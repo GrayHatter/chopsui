@@ -21,5 +21,6 @@ void *hashtable_get(hashtable_t *table, const void *key);
 void *hashtable_set(hashtable_t *table, const void *key, void *value);
 void *hashtable_del(hashtable_t *table, const void *key);
 bool hashtable_contains(hashtable_t *table, const void *key);
+void hashtable_iter(hashtable_t *table, void (*iter)(void *item, void *state), void *state);
 
 #endif

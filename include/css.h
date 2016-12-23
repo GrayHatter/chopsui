@@ -38,17 +38,17 @@ struct selector {
 	char *attr_value;
 };
 
-typedef struct selector *selector_t;
+typedef struct selector selector_t;
 
 /**
  * Parses a selector string and returns a new selector.
  */
-selector_t selector_parse(const char *source);
+selector_t *selector_parse(const char *source);
 
 /**
  * Frees a selector.
  */
-void selector_destroy(selector_t selector);
+void selector_destroy(selector_t *selector);
 
 struct style_property {
 	char *name;
@@ -118,7 +118,7 @@ struct stylesheet {
 typedef struct stylesheet stylesheet_t;
 
 stylesheet_t *stylesheet_parse(const char *source);
-stylesheet_t *stylesheet_parsef(FILE *source);
-void stylesheet_free(stylesheet_t *stylesheet);
+stylesheet_t *stylesheet_load(FILE *source);
+void stylesheet_destroy(stylesheet_t *stylesheet);
 
 #endif

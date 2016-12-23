@@ -126,3 +126,13 @@ void *hashtable_del(hashtable_t *table, const void *key) {
 		return old;
 	}
 }
+
+void hashtable_iter(hashtable_t *table, void (*iter)(void *item, void *state), void *state) {
+	for (size_t i = 0; i < table->bucket_count; ++i) {
+		hashtable_entry_t *entry = table->buckets[i];
+		while (entry) {
+			iter(entry, state);
+			entry = entry->next;
+		}
+	}
+}

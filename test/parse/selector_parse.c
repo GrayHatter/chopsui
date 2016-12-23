@@ -6,7 +6,7 @@
 char *test_name = "parse/selector_parse";
 
 static int test_basic_type() {
-	selector_t selector = selector_parse("test");
+	selector_t *selector = selector_parse("test");
 	assert(selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "test") == 0);
 	assert(!selector->next);
@@ -15,7 +15,7 @@ static int test_basic_type() {
 }
 
 static int test_basic_class() {
-	selector_t selector = selector_parse(".test");
+	selector_t *selector = selector_parse(".test");
 	assert(selector->type == SELECTOR_CLASS);
 	assert(strcmp(selector->value, "test") == 0);
 	assert(!selector->next);
@@ -24,7 +24,7 @@ static int test_basic_class() {
 }
 
 static int test_basic_id() {
-	selector_t selector = selector_parse("#test");
+	selector_t *selector = selector_parse("#test");
 	assert(selector->type == SELECTOR_ID);
 	assert(strcmp(selector->value, "test") == 0);
 	assert(!selector->next);
@@ -33,7 +33,7 @@ static int test_basic_id() {
 }
 
 static int test_descendants() {
-	selector_t selector = selector_parse("foo .bar #baz");
+	selector_t *selector = selector_parse("foo .bar #baz");
 	assert(selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "foo") == 0);
 	assert(selector->next);
@@ -51,7 +51,7 @@ static int test_descendants() {
 }
 
 static int test_pairs() {
-	selector_t selector = selector_parse("foo.bar");
+	selector_t *selector = selector_parse("foo.bar");
 	assert(selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "foo") == 0);
 	assert(selector->next);
@@ -62,7 +62,7 @@ static int test_pairs() {
 }
 
 static int test_child() {
-	selector_t selector = selector_parse("foo > .bar");
+	selector_t *selector = selector_parse("foo > .bar");
 	assert(selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "foo") == 0);
 	assert(selector->next);
@@ -76,7 +76,7 @@ static int test_child() {
 }
 
 static int test_sibling() {
-	selector_t selector = selector_parse("foo ~ .bar");
+	selector_t *selector = selector_parse("foo ~ .bar");
 	assert(selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "foo") == 0);
 	assert(selector->next);
@@ -90,7 +90,7 @@ static int test_sibling() {
 }
 
 static int test_next_sibling() {
-	selector_t selector = selector_parse("foo + .bar");
+	selector_t *selector = selector_parse("foo + .bar");
 	assert(selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "foo") == 0);
 	assert(selector->next);

@@ -5,6 +5,7 @@ OBJECTS=parse/selector_destroy.o \
 		parse/scalar_parse.o \
 		parse/stylesheet_parsec.o \
 		parse/stylesheet_parse.o \
+		parse/stylesheet_free.o \
 		parse/color_parse.o
 
 parse/parse.a: $(OBJECTS)
