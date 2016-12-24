@@ -11,13 +11,27 @@ struct parser_state {
 	uint32_t pending[8];
 };
 
+#define FLAG_WHITESPACE 1
+#define FLAG_COMMENTS 2
+
+typedef bool (*subparser_t)(stylesheet_t *css,
+		struct parser_state *pstate, uint32_t ch);
+
 struct parse_mode {
-	bool (*handler)(stylesheet_t *stylesheet, struct parser_state *pstate, uint32_t ch);
+	subparser_t parser;
 	void (*destructor)(void *state);
 	void *state;
+	uint32_t flags;
 };
 
-void css_parse_ch(stylesheet_t *stylesheet, struct parser_state *state,
-		uint32_t ch);
+void css_parse_ch(stylesheet_t *stylesheet,
+		struct parser_state *state, uint32_t ch);
+
+struct parse_mode *parse_mode_create(subparser_t);
+
+bool parse_comment(stylesheet_t *stylesheet,
+		struct parser_state *pstate, uint32_t ch);
+bool parse_document(stylesheet_t *stylesheet,
+		struct parser_state *pstate, uint32_t ch);
 
 #endif

@@ -1,7 +1,6 @@
 ARCHIVES+= css/css.a
 
-OBJECTS=css/parse/css_parse_ch.o \
-		css/color_parse.o \
+OBJECTS=css/color_parse.o \
 		css/css_parse.o \
 		css/scalar_parse.o \
 		css/selector_parse.o \
@@ -10,6 +9,8 @@ OBJECTS=css/parse/css_parse_ch.o \
 		css/selector_free.o \
 		css/stylesheet_free.o \
 		css/style_rule_free.o
+
+include css/parse/Makefile
 
 css/css.a: $(OBJECTS)
 	$(AR) $(ARFLAGS) $@ $?
