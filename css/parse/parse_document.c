@@ -22,17 +22,16 @@ static void document_state_free(void *_state) {
 	free(state);
 }
 
-bool parse_document(stylesheet_t *stylesheet,
+void parse_document(stylesheet_t *stylesheet,
 		struct parser_state *pstate, uint32_t ch) {
-	struct parse_mode *mode = list_peek(pstate->modes);
-	struct document_state *state = mode->state;
+	struct subparser_state *subp = list_peek(pstate->parsers);
+	struct document_state *state = subp->state;
 	if (!state) {
 		state = calloc(sizeof(struct document_state), 1);
-		mode->state = state;
-		mode->destructor = document_state_free;
+		subp->state = state;
+		subp->destructor = document_state_free;
 	}
 	if (isspace(ch)) {
-		continue;
+		return;
 	}
-	return false;
 }

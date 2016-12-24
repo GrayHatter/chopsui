@@ -7,54 +7,56 @@
 #include "util/list.h"
 #include "util/unicode.h"
 
-struct parse_mode *parse_mode_create(subparser_t parser) {
-	struct parse_mode *pm = calloc(sizeof(struct parse_mode), 1);
-	pm->parser = parser;
-	pm->state = NULL;
-	return pm;
+void push_parser(struct parser_state *state, subparser_t parser) {
+	struct subparser_state *subp = calloc(sizeof(struct subparser_state), 1);
+	subp->parser = parser;
+	subp->state = NULL;
+	list_push(state->parsers, subp);
+}
+
+void parser_state_append_ch(struct parser_state *state, uint32_t ch) {
+	state->pending[state->pending_head++] = ch;
+	state->pending_head %= sizeof(state->pending) / sizeof(uint32_t);
 }
 
 void css_parse_ch(stylesheet_t *stylesheet,
 		struct parser_state *state, uint32_t ch) {
-	if (!state->modes) {
-		state->modes = list_create();
+	if (!state->parsers) {
+		state->parsers = list_create();
 	}
-	if (state->modes->length == 0) {
+	if (state->parsers->length == 0) {
 		memset(&state->pending, 0, sizeof(state->pending));
 		state->pending_head = state->pending_tail = 0;
-		list_push(state->modes, parse_mode_create(parse_document));
+		push_parser(state, parse_document);
 	}
 
-	state->pending[state->pending_head++] = ch;
-	state->pending_head %= sizeof(state->pending) / sizeof(uint32_t);
+	parser_state_append_ch(state, ch);
 
 	while (state->pending_tail != state->pending_head) {
-		struct parse_mode *pm;
-		pm = list_peek(state->modes);
+		struct subparser_state *subp;
+		subp = list_peek(state->parsers);
 
 		ch = state->pending[state->pending_tail++];
 		state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
 
-		if (!(pm->flags & FLAG_WHITESPACE) && isspace(ch)) {
+		if (!(subp->flags & FLAG_WHITESPACE) && isspace(ch)) {
 			continue;
 		}
 
-		if (!(pm->flags & FLAG_COMMENTS) && ch == '/') {
+		if (!(subp->flags & FLAG_COMMENTS) && ch == '/') {
 			if (state->pending_tail == state->pending_head) {
 				--state->pending_tail;
 				state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
 				break;
 			}
 			if (state->pending[state->pending_tail] == '*') {
-				list_push(state->modes, parse_mode_create(parse_comment));
+				push_parser(state, parse_comment);
 				++state->pending_tail;
 				state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
 				continue;
 			}
 		}
 
-		do {
-			pm = list_peek(state->modes);
-		} while (pm->parser(stylesheet, state, ch));
+		subp->parser(stylesheet, state, ch);
 	}
 }

@@ -6,7 +6,7 @@
 #include "css.h"
 
 struct parser_state {
-	list_t *modes;
+	list_t *parsers;
 	int pending_head, pending_tail;
 	uint32_t pending[8];
 };
@@ -14,10 +14,10 @@ struct parser_state {
 #define FLAG_WHITESPACE 1
 #define FLAG_COMMENTS 2
 
-typedef bool (*subparser_t)(stylesheet_t *css,
+typedef void (*subparser_t)(stylesheet_t *css,
 		struct parser_state *pstate, uint32_t ch);
 
-struct parse_mode {
+struct subparser_state {
 	subparser_t parser;
 	void (*destructor)(void *state);
 	void *state;
@@ -27,11 +27,12 @@ struct parse_mode {
 void css_parse_ch(stylesheet_t *stylesheet,
 		struct parser_state *state, uint32_t ch);
 
-struct parse_mode *parse_mode_create(subparser_t);
+void push_parser(struct parser_state *state, subparser_t parser);
+void parser_state_append_ch(struct parser_state *state, uint32_t ch);
 
-bool parse_comment(stylesheet_t *stylesheet,
+void parse_comment(stylesheet_t *stylesheet,
 		struct parser_state *pstate, uint32_t ch);
-bool parse_document(stylesheet_t *stylesheet,
+void parse_document(stylesheet_t *stylesheet,
 		struct parser_state *pstate, uint32_t ch);
 
 #endif
