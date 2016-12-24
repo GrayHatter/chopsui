@@ -10,7 +10,7 @@ static int test_basic_type() {
 	assert(selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "test") == 0);
 	assert(!selector->next);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 
@@ -19,7 +19,7 @@ static int test_basic_class() {
 	assert(selector->type == SELECTOR_CLASS);
 	assert(strcmp(selector->value, "test") == 0);
 	assert(!selector->next);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 
@@ -28,7 +28,7 @@ static int test_basic_id() {
 	assert(selector->type == SELECTOR_ID);
 	assert(strcmp(selector->value, "test") == 0);
 	assert(!selector->next);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 
@@ -46,7 +46,7 @@ static int test_descendants() {
 	assert(selector->next->next->next->next);
 	assert(selector->next->next->next->next->type == SELECTOR_ID);
 	assert(strcmp(selector->next->next->next->next->value, "baz") == 0);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 
@@ -57,7 +57,7 @@ static int test_pairs() {
 	assert(selector->next);
 	assert(selector->next->type == SELECTOR_CLASS);
 	assert(strcmp(selector->next->value, "bar") == 0);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 
@@ -71,7 +71,7 @@ static int test_child() {
 	assert(selector->next->next->type == SELECTOR_CLASS);
 	assert(strcmp(selector->next->next->value, "bar") == 0);
 	assert(!selector->next->next->next);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 
@@ -85,7 +85,7 @@ static int test_sibling() {
 	assert(selector->next->next->type == SELECTOR_CLASS);
 	assert(strcmp(selector->next->next->value, "bar") == 0);
 	assert(!selector->next->next->next);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 
@@ -99,7 +99,7 @@ static int test_next_sibling() {
 	assert(selector->next->next->type == SELECTOR_CLASS);
 	assert(strcmp(selector->next->next->value, "bar") == 0);
 	assert(!selector->next->next->next);
-	selector_destroy(selector);
+	selector_free(selector);
 	return 0;
 }
 

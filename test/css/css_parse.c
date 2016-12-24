@@ -3,13 +3,13 @@
 #include "test.h"
 #include "css.h"
 
-char *test_name = "parse/stylesheet_parse";
+char *test_name = "parse/css_parse";
 
 static int test_comments() {
-	stylesheet_t *ss = stylesheet_parse("/* this should cause\n"
+	stylesheet_t *ss = css_parse("/* this should cause\n"
 			"a syntax error if comments aren't being handled\n"
 			"correctly. */");
-	stylesheet_destroy(ss);
+	stylesheet_free(ss);
 	return 0;
 }
 

@@ -15,7 +15,7 @@ typedef struct {
 } set_t;
 
 set_t *set_create(size_t buckets, unsigned int (*hash_function)(const void *));
-void set_destroy(set_t *set);
+void set_free(set_t *set);
 void set_add(set_t *set, const void *key);
 void set_del(set_t *set, const void *key);
 bool set_contains(set_t *set, const void *key);

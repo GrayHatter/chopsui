@@ -4,9 +4,9 @@ CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter \
 	-std=c11 -Iinclude/ -fPIC $(CFLAGS)
 
 %.o: %.c
-	$(CC) -c -o $@ $(INCLUDE) $(CFLAGS) $<
+	$(CC) -c -o $@ $(INCLUDE) -I$(shell dirname $<) $(CFLAGS) $<
 
-include parse/Makefile
+include css/Makefile
 include util/Makefile
 
 libchopsui.so: $(ARCHIVES)

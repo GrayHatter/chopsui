@@ -127,11 +127,11 @@ selector_t *selector_parse(const char *src) {
 		}
 	}
 	if (current->type == SELECTOR_DESCENDANT) {
-		selector_destroy(current);
+		selector_free(current);
 		current = prev;
 	}
 	return root;
 error:
-	selector_destroy(root);
+	selector_free(root);
 	return NULL;
 }

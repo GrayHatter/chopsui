@@ -48,7 +48,7 @@ selector_t *selector_parse(const char *source);
 /**
  * Frees a selector.
  */
-void selector_destroy(selector_t *selector);
+void selector_free(selector_t *selector);
 
 struct style_property {
 	char *name;
@@ -65,6 +65,8 @@ struct style_rule {
 };
 
 typedef struct style_rule style_rule_t;
+
+void style_rule_free(style_rule_t *style_rule);
 
 enum media_rule_feature {
 	MEDIA_FEAT_WIDTH,
@@ -97,6 +99,8 @@ struct media_rule {
 
 typedef struct media_rule media_rule_t;
 
+void media_rule_free(media_rule_t *media_rule);
+
 struct keyframe {
 	sui_scalar_t at;
 	list_t *rules;
@@ -109,6 +113,8 @@ struct keyframes {
 
 typedef struct keyframes keyframes_t;
 
+void keyframes_free(keyframes_t *keyframes);
+
 struct stylesheet {
 	list_t *rules;
 	list_t *media_rules;
@@ -117,8 +123,8 @@ struct stylesheet {
 
 typedef struct stylesheet stylesheet_t;
 
-stylesheet_t *stylesheet_parse(const char *source);
-stylesheet_t *stylesheet_load(FILE *source);
-void stylesheet_destroy(stylesheet_t *stylesheet);
+stylesheet_t *css_parse(const char *source);
+stylesheet_t *css_load(FILE *source);
+void stylesheet_free(stylesheet_t *stylesheet);
 
 #endif

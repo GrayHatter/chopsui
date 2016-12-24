@@ -3,20 +3,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "parse.h"
 #include "util/list.h"
 #include "util/unicode.h"
-#include "internal/stylesheet.h"
 
 static struct parse_mode *mode_create(bool (*handler)(stylesheet_t *stylesheet,
-		void *state, struct parser_state *pstate, uint32_t ch)) {
+			struct parser_state *pstate, uint32_t ch)) {
 	struct parse_mode *pm = malloc(sizeof(struct parse_mode));
 	pm->handler = handler;
 	pm->state = NULL;
 	return pm;
 }
 
-static bool handle_comment(stylesheet_t *stylesheet, void *state, struct
-		parser_state *pstate, uint32_t ch) {
+static bool handle_comment(stylesheet_t *stylesheet,
+		struct parser_state *pstate, uint32_t ch) {
 	size_t previous = (pstate->pending_tail - 2) %
 		(sizeof(pstate->pending) / sizeof(uint32_t));
 	if (ch == '/' && pstate->pending[previous] == '*') {
@@ -25,14 +25,35 @@ static bool handle_comment(stylesheet_t *stylesheet, void *state, struct
 	return false;
 }
 
-static bool handle_document(stylesheet_t *stylesheet, void *state, struct
-		parser_state *pstate, uint32_t ch) {
-	// TODO
+struct document_state {
+	style_rule_t *style_rule;
+	media_rule_t *media_rule;
+	keyframes_t *keyframes;
+};
+
+static void document_state_free(void *_state) {
+	struct document_state *state = _state;
+	if (!state) return;
+	style_rule_free(state->style_rule);
+	media_rule_free(state->media_rule);
+	keyframes_free(state->keyframes);
+	free(state);
+}
+
+static bool handle_document(stylesheet_t *stylesheet,
+		struct parser_state *pstate, uint32_t ch) {
+	struct parse_mode *mode = list_peek(pstate->modes);
+	struct document_state *state = mode->state;
+	if (!state) {
+		state = calloc(sizeof(struct document_state), 1);
+		mode->state = state;
+		mode->destructor = document_state_free;
+	}
 	return false;
 }
 
-void stylesheet_parsec(stylesheet_t *stylesheet, struct parser_state *state,
-		uint32_t ch) {
+void css_parse_ch(stylesheet_t *stylesheet,
+		struct parser_state *state, uint32_t ch) {
 	if (!state->modes) {
 		state->modes = list_create();
 	}
@@ -64,6 +85,6 @@ void stylesheet_parsec(stylesheet_t *stylesheet, struct parser_state *state,
 		struct parse_mode *pm;
 		do {
 			pm = list_peek(state->modes);
-		} while (pm->handler(stylesheet, pm->state, state, ch));
+		} while (pm->handler(stylesheet, state, ch));
 	}
 }

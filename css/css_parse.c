@@ -5,9 +5,9 @@
 #include "css.h"
 #include "util/list.h"
 #include "util/unicode.h"
-#include "internal/stylesheet.h"
+#include "parse/parse.h"
 
-stylesheet_t *stylesheet_parse(const char *source) {
+stylesheet_t *css_parse(const char *source) {
 	stylesheet_t *css = calloc(1, sizeof(stylesheet_t));
 	css->rules = list_create();
 	css->media_rules = list_create();
@@ -17,7 +17,7 @@ stylesheet_t *stylesheet_parse(const char *source) {
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);
-		stylesheet_parsec(css, &state, ch);
+		css_parse_ch(css, &state, ch);
 	}
 
 	return css;

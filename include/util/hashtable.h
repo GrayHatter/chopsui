@@ -16,7 +16,7 @@ typedef struct {
 } hashtable_t;
 
 hashtable_t *hashtable_create(size_t buckets, unsigned int (*hash_function)(const void *));
-void hashtable_destroy(hashtable_t *table);
+void hashtable_free(hashtable_t *table);
 void *hashtable_get(hashtable_t *table, const void *key);
 void *hashtable_set(hashtable_t *table, const void *key, void *value);
 void *hashtable_del(hashtable_t *table, const void *key);

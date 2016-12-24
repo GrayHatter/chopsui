@@ -18,7 +18,7 @@ static void free_bucket(hashtable_entry_t *bucket) {
 	}
 }
 
-void hashtable_destroy(hashtable_t *table) {
+void hashtable_free(hashtable_t *table) {
 	for (size_t i = 0; i < table->bucket_count; ++i) {
 		free_bucket(table->buckets[i]);
 	}

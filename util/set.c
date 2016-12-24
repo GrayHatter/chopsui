@@ -21,7 +21,7 @@ void free_bucket(set_entry_t *bucket) {
 	}
 }
 
-void set_destroy(set_t *set) {
+void set_free(set_t *set) {
 	for (size_t i = 0; i < set->bucket_count; ++i) {
 		free_bucket(set->buckets[i]);
 	}

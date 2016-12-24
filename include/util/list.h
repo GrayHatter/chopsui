@@ -10,7 +10,7 @@ typedef struct {
 } list_t;
 
 list_t *list_create(void);
-void list_destroy(list_t *list);
+void list_free(list_t *list);
 void list_foreach(list_t *list, void (*callback)(void* item));
 void list_add(list_t *list, void *item);
 void list_push(list_t *list, void *item);

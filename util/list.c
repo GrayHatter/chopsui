@@ -20,7 +20,7 @@ static void list_resize(list_t *list) {
 	}
 }
 
-void list_destroy(list_t *list) {
+void list_free(list_t *list) {
 	if (list == NULL) {
 		return;
 	}
