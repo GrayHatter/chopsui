@@ -20,5 +20,7 @@ stylesheet_t *css_parse(const char *source) {
 		css_parse_ch(css, &state, ch);
 	}
 
+	parser_state_cleanup(&state);
+
 	return css;
 }

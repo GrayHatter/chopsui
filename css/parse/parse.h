@@ -26,6 +26,7 @@ struct subparser_state {
 
 void css_parse_ch(stylesheet_t *stylesheet,
 		struct parser_state *state, uint32_t ch);
+void parser_state_cleanup(struct parser_state *state);
 
 void push_parser(struct parser_state *state, subparser_t parser);
 void parser_state_append_ch(struct parser_state *state, uint32_t ch);

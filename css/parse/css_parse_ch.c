@@ -19,6 +19,20 @@ void parser_state_append_ch(struct parser_state *state, uint32_t ch) {
 	state->pending_head %= sizeof(state->pending) / sizeof(uint32_t);
 }
 
+void parser_state_cleanup(struct parser_state *state) {
+	if (!state->parsers) {
+		return;
+	}
+	for (size_t i = 0; i < state->parsers->length; ++i) {
+		struct subparser_state *s = state->parsers->items[i];
+		if (s->destructor) {
+			s->destructor(s->state);
+		}
+		free(s);
+	}
+	list_free(state->parsers);
+}
+
 void css_parse_ch(stylesheet_t *stylesheet,
 		struct parser_state *state, uint32_t ch) {
 	if (!state->parsers) {
