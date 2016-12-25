@@ -36,5 +36,9 @@ void parse_comment(stylesheet_t *stylesheet,
 		struct parser_state *pstate, uint32_t ch);
 void parse_document(stylesheet_t *stylesheet,
 		struct parser_state *pstate, uint32_t ch);
+void parse_properties(stylesheet_t *stylesheet,
+		struct parser_state *pstate, uint32_t ch);
+struct subparser_state *push_properties_parser(struct parser_state *state,
+		style_rule_t *style_rule);
 
 #endif

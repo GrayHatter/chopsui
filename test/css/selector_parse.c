@@ -14,6 +14,15 @@ static int test_basic_type() {
 	return 0;
 }
 
+static int test_trailing_space() {
+	selector_t *selector = selector_parse("test ");
+	assert(selector->type == SELECTOR_TYPE);
+	assert(strcmp(selector->value, "test") == 0);
+	assert(!selector->next);
+	selector_free(selector);
+	return 0;
+}
+
 static int test_basic_class() {
 	selector_t *selector = selector_parse(".test");
 	assert(selector->type == SELECTOR_CLASS);
@@ -105,6 +114,7 @@ static int test_next_sibling() {
 
 int test_main() {
 	return test_basic_type()
+		|| test_trailing_space()
 		|| test_basic_class()
 		|| test_basic_id()
 		|| test_descendants()

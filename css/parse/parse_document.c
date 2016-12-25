@@ -24,7 +24,9 @@ static void document_state_free(void *_state) {
 	free(state);
 }
 
-static void commit_selector(struct document_state *state) {
+static void commit_selector(struct document_state *state,
+		struct parser_state *pstate) {
+	struct subparser_state *subparser = list_peek(pstate->parsers);
 	selector_t *selector = selector_parse(state->selector->str);
 	if (!selector) {
 		// TODO: error
@@ -39,18 +41,19 @@ static void commit_selector(struct document_state *state) {
 	list_add(state->style_rule->selectors, selector);
 	str_free(state->selector);
 	state->selector = NULL;
+	subparser->flags &= ~FLAG_WHITESPACE;
 }
 
 static void parse_selector_ch(stylesheet_t *stylesheet,
 	struct document_state *state, struct parser_state *pstate, uint32_t ch) {
 	switch (ch) {
 	case '{':
-		commit_selector(state);
-		// TODO: transition to parsing properties
-		list_add(stylesheet->rules, state->style_rule);
+		commit_selector(state, pstate);
+		push_properties_parser(pstate, state->style_rule);
+		state->style_rule = NULL;
 		break;
 	case ',':
-		commit_selector(state);
+		commit_selector(state, pstate);
 		break;
 	default:
 		str_append_ch(state->selector, ch);
@@ -60,13 +63,13 @@ static void parse_selector_ch(stylesheet_t *stylesheet,
 
 void parse_document(stylesheet_t *stylesheet,
 		struct parser_state *pstate, uint32_t ch) {
-	struct subparser_state *subp = list_peek(pstate->parsers);
-	struct document_state *state = subp->state;
+	struct subparser_state *subparser = list_peek(pstate->parsers);
+	struct document_state *state = subparser->state;
 
 	if (!state) {
 		state = calloc(sizeof(struct document_state), 1);
-		subp->state = state;
-		subp->destructor = document_state_free;
+		subparser->state = state;
+		subparser->destructor = document_state_free;
 	}
 
 	if (!state->selector && !state->media_rule && !state->keyframes) {
@@ -79,7 +82,7 @@ void parse_document(stylesheet_t *stylesheet,
 			break;
 		default:
 			state->selector = str_create();
-			subp->flags |= FLAG_WHITESPACE;
+			subparser->flags |= FLAG_WHITESPACE;
 			break;
 		}
 	}
