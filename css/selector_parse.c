@@ -64,10 +64,13 @@ selector_t *selector_parse(const char *src) {
 		if (isspace(ch)) {
 			if (current != root) {
 				current->type = SELECTOR_DESCENDANT;
-				while (isspace(ch)) {
+				while (ch && isspace(ch)) {
 					ch = utf8_decode(&src);
 				}
-				if (*src && !strchr(">~+", ch)) {
+				if (!ch) {
+					break;
+				}
+				if (ch && !strchr(">~+", ch)) {
 					current->next = calloc(sizeof(struct selector), 1);
 					prev = current;
 					current = current->next;
@@ -128,7 +131,7 @@ selector_t *selector_parse(const char *src) {
 	}
 	if (current->type == SELECTOR_DESCENDANT) {
 		selector_free(current);
-		current = prev;
+		prev->next = NULL;
 	}
 	return root;
 error:
