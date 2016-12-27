@@ -24,6 +24,9 @@ void selector_print(selector_t *s, bool pretty,
 			putch('.');
 			sputs(putch, s->value);
 			break;
+		case SELECTOR_ANY:
+			putch('*');
+			break;
 		case SELECTOR_ATTRIBUTE:
 			putch('[');
 			sputs(putch, s->value);

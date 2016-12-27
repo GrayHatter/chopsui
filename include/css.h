@@ -8,6 +8,7 @@
 #include "scalars.h"
 
 enum selector_type {
+	SELECTOR_ANY,          // *
 	SELECTOR_TYPE,         // type
 	SELECTOR_ID,           // #id
 	SELECTOR_CLASS,        // .class

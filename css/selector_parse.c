@@ -103,6 +103,9 @@ selector_t *selector_parse(const char *src) {
 				while (*src && *src != ']') ++src;
 				if (*src) ++src;
 				continue;
+			case '*':
+				current->type = SELECTOR_ANY;
+				break;
 			case '#':
 				current->type = SELECTOR_ID;
 				current->specificity += 0;
