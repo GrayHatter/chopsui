@@ -1,6 +1,7 @@
 sinclude config.mk
 
-CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter \
+# -Wno-missing-field-initializers to stop clang from errorneously warning on struct = { 0 }
+CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter -Wno-missing-field-initializers \
 	-std=c11 -Iinclude/ -fPIC $(CFLAGS)
 
 %.o: %.c
