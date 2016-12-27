@@ -82,7 +82,7 @@ void parse_properties(stylesheet_t *stylesheet,
 			state->escape = false;
 		} else {
 			if (ch == state->quotes) {
-				subparser->flags &= ~FLAG_WHITESPACE;
+				subparser->flags &= ~(FLAG_WHITESPACE | FLAG_COMMENTS);
 				state->quotes = '\0';
 			} else if (ch == '\\') {
 				state->escape = true;
@@ -118,7 +118,7 @@ void parse_properties(stylesheet_t *stylesheet,
 		case '\'': // Fallthrough
 		case '"':
 			if (state->value) {
-				subparser->flags |= FLAG_WHITESPACE;
+				subparser->flags |= FLAG_WHITESPACE | FLAG_COMMENTS;
 				state->quotes = ch;
 			} else {
 				parser_error(pstate, "Quotes are only valid for values, not keys");

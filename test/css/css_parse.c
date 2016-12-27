@@ -105,7 +105,7 @@ static int test_multi_properties() {
 static int test_quoted_properties() {
 	stylesheet_t *ss = css_parse("foo { \n"
 			"\ttext: \"hello: {world};!\";\n"
-			"\theader: 'hello: \\'world\\';!';\n"
+			"\theader: '/*hello*/: \\'world\\';!';\n"
 			"}", NULL);
 	assert(ss->rules->length == 1);
 
@@ -116,7 +116,7 @@ static int test_quoted_properties() {
 	assert(value && strcmp(value, "hello: {world};!") == 0);
 
 	value = hashtable_get(rule->properties, "header");
-	assert(value && strcmp(value, "hello: \'world\';!") == 0);
+	assert(value && strcmp(value, "/*hello*/: \'world\';!") == 0);
 
 	stylesheet_free(ss);
 	return 0;
