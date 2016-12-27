@@ -4,4 +4,4 @@ CPP=cpp
 LD=ld
 LDFLAGS=
 AR=ar
-ARFLAGS=srv
+ARFLAGS=sr
