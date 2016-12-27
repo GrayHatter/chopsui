@@ -105,12 +105,14 @@ selector_t *selector_parse(const char *src) {
 				continue;
 			case '#':
 				current->type = SELECTOR_ID;
+				current->specificity += 0;
 				if (!parse_selector_atom(current, &src)) {
 					goto error;
 				}
 				break;
 			case '.':
 				current->type = SELECTOR_CLASS;
+				current->specificity += 1;
 				if (!parse_selector_atom(current, &src)) {
 					goto error;
 				}
@@ -118,6 +120,7 @@ selector_t *selector_parse(const char *src) {
 			default:
 				src -= utf8_chsize(ch);
 				current->type = SELECTOR_TYPE;
+				current->specificity += 2;
 				if (!parse_selector_atom(current, &src)) {
 					goto error;
 				}

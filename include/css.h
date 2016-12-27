@@ -32,6 +32,7 @@ struct selector {
 
 	enum selector_type type;
 	char *value;
+	int specificity;
 
 	// Used for attribute selectors
 	enum attribute_comparison comparison;
@@ -51,10 +52,6 @@ selector_t *selector_parse(const char *source);
 void selector_free(selector_t *selector);
 
 struct style_rule {
-	// Type: 0
-	// Class: 1
-	// ID: 2
-	int specificity;
 	list_t *selectors;
 	hashtable_t *properties;
 };
