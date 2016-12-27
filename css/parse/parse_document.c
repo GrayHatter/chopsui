@@ -46,7 +46,6 @@ static void commit_selector(struct document_state *state,
 	str_free(state->selector);
 	state->selector = NULL;
 	subparser->flags &= ~FLAG_WHITESPACE;
-	// TODO: Calculate specificity here
 }
 
 static void parse_selector_ch(stylesheet_t *stylesheet,
