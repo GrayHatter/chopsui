@@ -12,6 +12,7 @@
 struct properties_state {
 	style_rule_t *style_rule;
 	str_t *key, *value;
+	bool escape;
 	uint32_t quotes;
 };
 
@@ -41,12 +42,53 @@ void parse_properties(stylesheet_t *stylesheet,
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct properties_state *state = subparser->state;
 	if (state->quotes) {
-		// TODO: Handle escape sequences
-		if (ch == state->quotes) {
-			subparser->flags &= ~FLAG_WHITESPACE;
-			state->quotes = '\0';
+		if (state->escape) {
+			switch (ch) {
+			//case '0': // Intentionally unsupported
+			case 'a':
+				str_append_ch(state->value, '\a');
+				break;
+			case 'b':
+				str_append_ch(state->value, '\b');
+				break;
+			case 't':
+				str_append_ch(state->value, '\t');
+				break;
+			case 'n':
+				str_append_ch(state->value, '\n');
+				break;
+			case 'v':
+				str_append_ch(state->value, '\v');
+				break;
+			case 'f':
+				str_append_ch(state->value, '\f');
+				break;
+			case 'r':
+				str_append_ch(state->value, '\r');
+				break;
+			case '\\':
+				str_append_ch(state->value, '\\');
+				break;
+			case '"':
+				str_append_ch(state->value, '"');
+				break;
+			case '\'':
+				str_append_ch(state->value, '\'');
+				break;
+			default:
+				// TODO: error
+				break;
+			}
+			state->escape = false;
 		} else {
-			str_append_ch(state->value, ch);
+			if (ch == state->quotes) {
+				subparser->flags &= ~FLAG_WHITESPACE;
+				state->quotes = '\0';
+			} else if (ch == '\\') {
+				state->escape = true;
+			} else {
+				str_append_ch(state->value, ch);
+			}
 		}
 	} else {
 		switch (ch) {
