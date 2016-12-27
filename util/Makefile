@@ -8,7 +8,8 @@ OBJECTS=util/hashtable.o \
 		util/utf8_encode.o \
 		util/utf8_size.o \
 		util/string.o \
-		util/hash.o
+		util/hash.o \
+		util/errors.o
 
 util/util.a: $(OBJECTS)
 	$(AR) $(ARFLAGS) $@ $?

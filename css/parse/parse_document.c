@@ -6,6 +6,7 @@
 #include "parse.h"
 #include "util/hash.h"
 #include "util/list.h"
+#include "util/errors.h"
 #include "util/unicode.h"
 #include "util/string.h"
 
@@ -30,8 +31,8 @@ static void commit_selector(struct document_state *state,
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	selector_t *selector = selector_parse(state->selector->str);
 	if (!selector) {
-		// TODO: error
-		return;
+		parser_error(pstate, "Invalid selector '%s'", state->selector->str);
+		goto cleanup;
 	}
 	if (!state->style_rule) {
 		state->style_rule = calloc(sizeof(style_rule_t), 1);
@@ -43,6 +44,7 @@ static void commit_selector(struct document_state *state,
 		state->style_rule->properties = hashtable_create(128, hash);
 	}
 	list_add(state->style_rule->selectors, selector);
+cleanup:
 	str_free(state->selector);
 	state->selector = NULL;
 	subparser->flags &= ~FLAG_WHITESPACE;
@@ -82,7 +84,9 @@ void parse_document(stylesheet_t *stylesheet,
 			// TODO: media/keyframes
 			break;
 		case '{':
-			// TODO: error
+			parser_error(pstate, "Expected selector before properties");
+			subparser->wait = '}';
+			subparser->flags |= FLAG_WAIT;
 			break;
 		default:
 			state->selector = str_create();

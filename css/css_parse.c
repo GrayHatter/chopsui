@@ -5,15 +5,17 @@
 #include "css.h"
 #include "util/list.h"
 #include "util/unicode.h"
+#include "util/errors.h"
 #include "parse/parse.h"
 
-stylesheet_t *css_parse(const char *source) {
+stylesheet_t *css_parse(const char *source, errors_t **errs) {
 	stylesheet_t *css = calloc(1, sizeof(stylesheet_t));
 	css->rules = list_create();
 	css->media_rules = list_create();
 	css->keyframes = list_create();
 
 	struct parser_state state = { 0 };
+	state.errs = errs;
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "util/list.h"
 #include "util/hashtable.h"
+#include "util/errors.h"
 #include "scalars.h"
 
 enum selector_type {
@@ -42,7 +43,7 @@ struct selector {
 typedef struct selector selector_t;
 
 /**
- * Parses a selector string and returns a new selector.
+ * Parses a selector string and returns a new selector. Returns NULL on error.
  */
 selector_t *selector_parse(const char *source);
 
@@ -121,8 +122,8 @@ struct stylesheet {
 
 typedef struct stylesheet stylesheet_t;
 
-stylesheet_t *css_parse(const char *source);
-stylesheet_t *css_load(FILE *source);
+stylesheet_t *css_parse(const char *source, errors_t **errs);
+stylesheet_t *css_load(FILE *source, errors_t **errs);
 void stylesheet_free(stylesheet_t *stylesheet);
 
 #endif

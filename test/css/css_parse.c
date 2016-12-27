@@ -9,13 +9,13 @@ char *test_name = "parse/css_parse";
 static int test_comments() {
 	stylesheet_t *ss = css_parse("/* this should cause\n"
 			"a syntax error if comments aren't being handled\n"
-			"correctly. */");
+			"correctly. */", NULL);
 	stylesheet_free(ss);
 	return 0;
 }
 
 static int test_selector() {
-	stylesheet_t *ss = css_parse("foo .bar { }");
+	stylesheet_t *ss = css_parse("foo .bar { }", NULL);
 	assert(ss->rules->length == 1);
 	style_rule_t *rule = ss->rules->items[0];
 	assert(rule && rule->selectors->length == 1);
@@ -31,7 +31,7 @@ static int test_selector() {
 }
 
 static int test_multiple_rules() {
-	stylesheet_t *ss = css_parse("foo { } bar { }");
+	stylesheet_t *ss = css_parse("foo { } bar { }", NULL);
 	assert(ss->rules->length == 2);
 
 	style_rule_t *rule = ss->rules->items[0];
@@ -49,7 +49,7 @@ static int test_multiple_rules() {
 }
 
 static int test_multiple_selectors() {
-	stylesheet_t *ss = css_parse("foo, bar { }");
+	stylesheet_t *ss = css_parse("foo, bar { }", NULL);
 	assert(ss->rules->length == 1);
 
 	style_rule_t *rule = ss->rules->items[0];
@@ -69,7 +69,7 @@ static int test_multiple_selectors() {
 }
 
 static int test_properties() {
-	stylesheet_t *ss = css_parse("foo { background: red; }");
+	stylesheet_t *ss = css_parse("foo { background: red; }", NULL);
 	assert(ss->rules->length == 1);
 
 	style_rule_t *rule = ss->rules->items[0];
@@ -86,7 +86,7 @@ static int test_multi_properties() {
 	stylesheet_t *ss = css_parse("foo { \n"
 			"\tbackground: red;\n"
 			"\tfont-weight: bold;\n"
-			"}");
+			"}", NULL);
 	assert(ss->rules->length == 1);
 
 	style_rule_t *rule = ss->rules->items[0];
@@ -106,7 +106,7 @@ static int test_quoted_properties() {
 	stylesheet_t *ss = css_parse("foo { \n"
 			"\ttext: \"hello: {world};!\";\n"
 			"\theader: 'hello: \\'world\\';!';\n"
-			"}");
+			"}", NULL);
 	assert(ss->rules->length == 1);
 
 	style_rule_t *rule = ss->rules->items[0];
@@ -122,6 +122,18 @@ static int test_quoted_properties() {
 	return 0;
 }
 
+static int test_errors() {
+	errors_t *errors = NULL;
+	stylesheet_t *ss = css_parse("\n{ test }", &errors);
+	assert(errors);
+	assert(errors->length == 1);
+	assert(strcmp((char *)errors->items[0],
+		"[2:1] Expected selector before properties") == 0);
+	errors_free(errors);
+	stylesheet_free(ss);
+	return 0;
+}
+
 int test_main() {
 	return test_comments()
 		|| test_selector()
@@ -130,5 +142,6 @@ int test_main() {
 		|| test_properties()
 		|| test_multi_properties()
 		|| test_quoted_properties()
+		|| test_errors()
 	;
 }

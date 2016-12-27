@@ -76,7 +76,7 @@ void parse_properties(stylesheet_t *stylesheet,
 				str_append_ch(state->value, '\'');
 				break;
 			default:
-				// TODO: error
+				parser_error(pstate, "Unknown escape sequence \\%c", (char)ch);
 				break;
 			}
 			state->escape = false;
@@ -94,14 +94,14 @@ void parse_properties(stylesheet_t *stylesheet,
 		switch (ch) {
 		case ':':
 			if (state->value) {
-				// TODO: error
+				parser_error(pstate, "Expected key before value");
 			} else {
 				state->value = str_create();
 			}
 			break;
 		case ';':
 			if (!state->value || !state->key) {
-				// TODO: error
+				parser_error(pstate, "Expected key/value pair before semicolon");
 			} else {
 				hashtable_set(state->style_rule->properties,
 						state->key->str, state->value->str);
@@ -121,7 +121,7 @@ void parse_properties(stylesheet_t *stylesheet,
 				subparser->flags |= FLAG_WHITESPACE;
 				state->quotes = ch;
 			} else {
-				// TODO: error
+				parser_error(pstate, "Quotes are only valid for values, not keys");
 			}
 			break;
 		default:

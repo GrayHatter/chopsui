@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -5,7 +6,40 @@
 #include <ctype.h>
 #include "parse.h"
 #include "util/list.h"
+#include "util/errors.h"
 #include "util/unicode.h"
+
+void parser_error(struct parser_state *state, const char *fmt, ...) {
+	char staticbuf[256];
+
+	if (!state->errs) {
+		return;
+	}
+
+	va_list args;
+	va_start(args, fmt);
+	int len = vsnprintf(NULL, 0, fmt, args);
+	va_end(args);
+
+	char *buf;
+
+	if (len + 1 <= 256) {
+		buf = staticbuf;
+	} else {
+		buf = malloc(len + 1);
+	}
+
+	va_start(args, fmt);
+	vsnprintf(buf, len + 1, fmt, args);
+	va_end(args);
+
+	append_error(state->errs, "[%d:%d] %s",
+			state->lineno, state->colno, buf);
+
+	if (len + 1 > 256) {
+		free(buf);
+	}
+}
 
 struct subparser_state *push_parser(struct parser_state *state,
 		subparser_t parser) {
@@ -43,6 +77,7 @@ void css_parse_ch(stylesheet_t *stylesheet,
 	if (state->parsers->length == 0) {
 		memset(&state->pending, 0, sizeof(state->pending));
 		state->pending_head = state->pending_tail = 0;
+		state->lineno = state->colno = 1;
 		push_parser(state, parse_document);
 	}
 
@@ -55,8 +90,15 @@ void css_parse_ch(stylesheet_t *stylesheet,
 		ch = state->pending[state->pending_tail++];
 		state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
 
+		if ((subp->flags & FLAG_WAIT)) {
+			if (ch == subp->wait) {
+				subp->flags &= ~FLAG_WAIT;
+			}
+			goto loop_cont;
+		}
+
 		if (!(subp->flags & FLAG_WHITESPACE) && isspace(ch)) {
-			continue;
+			goto loop_cont;
 		}
 
 		if (!(subp->flags & FLAG_COMMENTS) && ch == '/') {
@@ -69,10 +111,18 @@ void css_parse_ch(stylesheet_t *stylesheet,
 				push_parser(state, parse_comment);
 				++state->pending_tail;
 				state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
-				continue;
+				goto loop_cont;
 			}
 		}
 
 		subp->parser(stylesheet, state, ch);
+
+loop_cont:
+		if (ch == '\n') {
+			++state->lineno;
+			state->colno = 1;
+		} else {
+			++state->colno;
+		}
 	}
 }
