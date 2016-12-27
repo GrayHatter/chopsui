@@ -2,11 +2,7 @@
 #include "util/list.h"
 #include "css.h"
 
-static void style_property_free_iter(void *_prop, void *_) {
-	struct style_property *prop = _prop;
-	if (!prop) return;
-	free(prop->name);
-	free(prop->value);
+static void style_property_free_iter(void *prop, void *_) {
 	free(prop);
 }
 

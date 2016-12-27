@@ -131,7 +131,7 @@ void hashtable_iter(hashtable_t *table, void (*iter)(void *item, void *state), v
 	for (size_t i = 0; i < table->bucket_count; ++i) {
 		hashtable_entry_t *entry = table->buckets[i];
 		while (entry) {
-			iter(entry, state);
+			iter(entry->value, state);
 			entry = entry->next;
 		}
 	}

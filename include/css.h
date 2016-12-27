@@ -50,11 +50,6 @@ selector_t *selector_parse(const char *source);
  */
 void selector_free(selector_t *selector);
 
-struct style_property {
-	char *name;
-	char *value;
-};
-
 struct style_rule {
 	// Type: 0
 	// Class: 1

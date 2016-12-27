@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "parse.h"
+#include "util/hash.h"
 #include "util/list.h"
 #include "util/unicode.h"
 #include "util/string.h"
@@ -38,10 +39,14 @@ static void commit_selector(struct document_state *state,
 	if (!state->style_rule->selectors) {
 		state->style_rule->selectors = list_create();
 	}
+	if (!state->style_rule->properties) {
+		state->style_rule->properties = hashtable_create(128, hash);
+	}
 	list_add(state->style_rule->selectors, selector);
 	str_free(state->selector);
 	state->selector = NULL;
 	subparser->flags &= ~FLAG_WHITESPACE;
+	// TODO: Calculate specificity here
 }
 
 static void parse_selector_ch(stylesheet_t *stylesheet,
