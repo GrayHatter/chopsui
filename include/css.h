@@ -51,6 +51,12 @@ selector_t *selector_parse(const char *source);
  */
 void selector_free(selector_t *selector);
 
+/**
+ * Prints a selector.
+ */
+void selector_print(selector_t *selector, bool pretty,
+		void (*putch)(uint32_t ch));
+
 struct style_rule {
 	list_t *selectors;
 	hashtable_t *properties;
