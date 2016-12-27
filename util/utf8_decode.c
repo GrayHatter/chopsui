@@ -3,17 +3,17 @@
 #include "util/unicode.h"
 
 uint8_t masks[] = {
-	0x80,
-	0xE0,
-	0xF0,
-	0xF8,
-	0xFC,
-	0xFE
+	0x7F,
+	0x1F,
+	0x0F,
+	0x07,
+	0x03,
+	0x01
 };
 
 uint32_t utf8_decode(const char **s) {
 	uint32_t cp = 0;
-	if (**s < 0) {
+	if (**s >= 0) {
 		// shortcut
 		cp = **s;
 		++*s;
@@ -21,20 +21,15 @@ uint32_t utf8_decode(const char **s) {
 	}
 	int size = utf8_size(*s);
 	if (size == -1) {
+		++*s;
 		return UTF8_INVALID;
 	}
-	uint32_t c = (uint8_t)**s;
+	uint8_t mask = masks[size - 1];
+	cp = (uint8_t)**s & mask;
 	++*s;
-	c &= ~masks[size - 1];
-	c <<= (size - 1) * 6;
-	cp |= c;
-	int shift = size * 6;
 	while (--size) {
-		uint32_t c = (uint8_t)**s;
-		c &= ~0xC0;
-		c <<= shift;
-		shift -= 6;
-		cp |= c;
+		cp <<= 6;
+		cp |= **s & 0x3f;
 		++*s;
 	}
 	return cp;
