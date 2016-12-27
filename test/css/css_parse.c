@@ -6,11 +6,10 @@
 
 char *test_name = "parse/css_parse";
 
-/*
 static int test_comments() {
-	stylesheet_t *ss = css_parse("* this should cause\n"
+	stylesheet_t *ss = css_parse("/* this should cause\n"
 			"a syntax error if comments aren't being handled\n"
-			"correctly. *");
+			"correctly. */");
 	stylesheet_free(ss);
 	return 0;
 }
@@ -82,7 +81,6 @@ static int test_properties() {
 	stylesheet_free(ss);
 	return 0;
 }
-*/
 
 static int test_multi_properties() {
 	stylesheet_t *ss = css_parse("foo { \n"
@@ -105,11 +103,11 @@ static int test_multi_properties() {
 }
 
 int test_main() {
-	return /* test_comments()
+	return test_comments()
 		|| test_selector()
 		|| test_multiple_rules()
 		|| test_multiple_selectors()
 		|| test_properties()
-		|| */test_multi_properties()
+		|| test_multi_properties()
 	;
 }
