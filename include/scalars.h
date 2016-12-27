@@ -46,4 +46,27 @@ bool scalar_parse(const char *s, sui_scalar_t *scalar);
  */
 bool color_parse(const char *str, uint32_t *val);
 
+struct display_info {
+	double font_size;
+	double root_font_size;
+};
+
+/**
+ * Normalizes the units of a sui_scalar_t, optionally normalizing pixels with
+ * the provided display information.
+ *
+ * The provided scalar will be reduced to the following units:
+ *
+ * - SCALAR_INT
+ * - SCALAR_FLOAT
+ * - SCALAR_DPI
+ * - SCALAR_PX
+ * - SCALAR_PERCENT
+ * - SCALAR_RAD
+ * - SCALAR_S
+ * - SCALAR_HZ
+ * - SCALAR_COLOR
+ */
+void scalar_normalize(sui_scalar_t *scalar, struct display_info *info);
+
 #endif

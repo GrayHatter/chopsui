@@ -8,7 +8,8 @@ OBJECTS=css/color_parse.o \
 		css/media_rule_free.o \
 		css/selector_free.o \
 		css/stylesheet_free.o \
-		css/style_rule_free.o
+		css/style_rule_free.o \
+		css/scalar_normalize.o
 
 include css/parse/Makefile
 
