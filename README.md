@@ -1,4 +1,4 @@
-# chopsui ![](https://travis-ci.org/SirCmpwn/chopsui.svg?branch=master)
+# chopsui [![](https://travis-ci.org/SirCmpwn/chopsui.svg?branch=master)](https://travis-ci.org/SirCmpwn/chopsui)
 
 This is a **very** WIP library for creating user interfaces. There are no
 screenshots because it doesn't support rendering yet.
