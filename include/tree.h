@@ -3,7 +3,7 @@
 
 #include "util/list.h"
 #include "node.h"
-#include "elements.h"
+#include "type.h"
 #include "css.h"
 
 /**

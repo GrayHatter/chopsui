@@ -2,6 +2,7 @@
 #define _HASHTABLE_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 typedef struct {
 	unsigned int key;

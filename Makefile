@@ -8,6 +8,7 @@ CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter -Wno-missing-field-initializ
 	$(CC) -c -o $@ $(INCLUDE) -I$(shell dirname $<) $(CFLAGS) $<
 
 include css/Makefile
+include node/Makefile
 include util/Makefile
 
 libchopsui.so: $(ARCHIVES)

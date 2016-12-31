@@ -1,11 +1,11 @@
 #ifndef _SUI_TYPE_H
 #define _SUI_TYPE_H
 
-#include "node.h"
+typedef struct sui_node sui_node_t;
 
 struct sui_type_impl {
-	void (*free)(sui_node_t node);
-	void (*attr)(sui_node_t node, const char *key, const char *value);
+	void (*free)(sui_node_t *node);
+	void (*attr)(sui_node_t *node, const char *key, const char *value);
 };
 
 typedef struct sui_type_impl *sui_type_impl_t;

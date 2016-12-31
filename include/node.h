@@ -2,14 +2,15 @@
 #define _SUI_NODE_H
 
 #include <stdbool.h>
-#include "Yoga.h"
+//#include "Yoga.h"
 //#include "util/bloom.h"
 #include "util/hashtable.h"
 #include "util/list.h"
 #include "util/set.h"
+#include "type.h"
 
 struct sui_node {
-	YGNodeRef layout_node;
+//	YGNodeRef layout_node;
 	struct sui_node *parent;
 
 	char *id;
@@ -18,7 +19,7 @@ struct sui_node {
 	hashtable_t *attributes; // char *, char *
 
 	void *impl_state;
-	sui_elem_impl_t elem_impl;
+	sui_type_impl_t impl;
 
 //	bloom_t ancestors;
 };
@@ -51,6 +52,6 @@ void node_remove_class(sui_node_t *node, const char *name);
  * Frees this node and all of its children. Detaches it from the parent first if
  * necessary.
  */
-void node_free_node(sui_node_t *node);
+void node_free(sui_node_t *node);
 
 #endif
