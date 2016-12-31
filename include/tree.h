@@ -39,7 +39,7 @@ void node_iter_descendants(sui_node_t node, const char *selector, void (*iter)(s
 /**
  * Adds the node to the end of the parent's children.
  */
-void node_add_child(sui_node_t parent, sui_node_t child);
+void node_append_child(sui_node_t parent, sui_node_t child);
 /**
  * Inserts the node in the parent's children at the specified index.
  */
