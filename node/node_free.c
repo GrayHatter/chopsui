@@ -7,7 +7,7 @@ static void free_attr_iter(void *val, void *_) {
 }
 
 void node_free(sui_node_t *node) {
-	// node_detach(node);
+	node_detach(node);
 	free(node->id);
 	set_free(node->classes);
 	for (size_t i = 0; node->children && i < node->children->length; ++i) {
