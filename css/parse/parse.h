@@ -12,12 +12,11 @@
 #define FLAG_COMMENTS 2
 #define FLAG_WAIT 4
 
-void css_parse_ch(stylesheet_t *stylesheet,
-		struct parser_state *state, uint32_t ch);
+int css_parse_ch(struct parser_state *state, uint32_t ch);
 
-void parse_comment(void *_css, struct parser_state *pstate, uint32_t ch);
-void parse_document(void *_css, struct parser_state *pstate, uint32_t ch);
-void parse_properties(void *_css, struct parser_state *pstate, uint32_t ch);
+void parse_comment(struct parser_state *pstate, uint32_t ch);
+void parse_document(struct parser_state *pstate, uint32_t ch);
+void parse_properties(struct parser_state *pstate, uint32_t ch);
 
 struct subparser_state *push_properties(struct parser_state *state,
 		style_rule_t *style_rule);

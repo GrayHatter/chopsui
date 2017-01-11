@@ -67,7 +67,7 @@ static void parse_selector_ch(struct document_state *state,
 	}
 }
 
-void parse_document(void *_css, struct parser_state *pstate, uint32_t ch) {
+void parse_document(struct parser_state *pstate, uint32_t ch) {
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct document_state *state = subparser->state;
 

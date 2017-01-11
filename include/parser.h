@@ -6,6 +6,10 @@
 #include "util/errors.h"
 #include "util/list.h"
 
+#define PARSER_SKIP 1
+#define PARSER_DEFER 2
+#define PARSER_CONTINUE 3
+
 struct parser_state {
 	list_t *parsers;
 	int pending_head, pending_tail;
@@ -13,10 +17,12 @@ struct parser_state {
 	errors_t **errs;
 	int lineno, colno;
 	void *data;
+	int (*iter)(struct parser_state *, uint32_t);
 };
 
-typedef void (*subparser_t)(void *data,
-		struct parser_state *pstate, uint32_t ch);
+typedef void (*subparser_t)(struct parser_state *pstate, uint32_t ch);
+
+typedef int (*parser_iter_t)(struct parser_state *pstate, uint32_t ch);
 
 struct subparser_state {
 	subparser_t parser;
@@ -31,5 +37,21 @@ struct subparser_state *parser_push(struct parser_state *state,
 		subparser_t parser);
 void parser_append_ch(struct parser_state *state, uint32_t ch);
 void parser_cleanup(struct parser_state *state);
+
+/*
+ * Initializes the parser state, sets the initial parser as specified, and
+ * configures the grammar-specific iter function.
+ */
+void parser_init(struct parser_state *state, subparser_t initial_parser,
+		parser_iter_t iter);
+
+/*
+ * Runs one iteration of the parser loop with the given character. Will invoke
+ * the grammar-specific iter function for each character processed, which can
+ * return one of PARSER_SKIP, PARSER_DEFER, or PARSER_CONTINUE. PARSER_SKIP
+ * skips the subparser, PARSER_DEFER leaves the loop and defers the character
+ * for later processing, and PARSER_CONTINUE continues normally.
+ */
+void parse_ch(struct parser_state *state, uint32_t ch);
 
 #endif

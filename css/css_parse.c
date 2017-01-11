@@ -15,16 +15,17 @@ stylesheet_t *css_parse(const char *source, errors_t **errs) {
 	css->media_rules = list_create();
 	css->keyframes = list_create();
 
-	struct parser_state state = { 0 };
+	struct parser_state state;
+	memset(&state, 0, sizeof(state));
 	state.errs = errs;
 	state.data = css;
+	parser_init(&state, parse_document, css_parse_ch);
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);
-		css_parse_ch(css, &state, ch);
+		parse_ch(&state, ch);
 	}
 
 	parser_cleanup(&state);
-
 	return css;
 }

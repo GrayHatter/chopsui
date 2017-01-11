@@ -36,8 +36,8 @@ struct subparser_state *push_properties(struct parser_state *state,
 	return subparser;
 }
 
-void parse_properties(void *_css, struct parser_state *pstate, uint32_t ch) {
-	stylesheet_t *css = _css;
+void parse_properties(struct parser_state *pstate, uint32_t ch) {
+	stylesheet_t *css = pstate->data;
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct properties_state *state = subparser->state;
 	if (state->quotes) {
