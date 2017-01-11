@@ -25,10 +25,9 @@ static void properties_state_free(void *_state) {
 	free(state);
 }
 
-struct subparser_state *push_properties_parser(struct parser_state *state,
+struct subparser_state *push_properties(struct parser_state *state,
 		style_rule_t *style_rule) {
-	struct subparser_state *subparser = push_parser(state,
-		parse_properties);
+	struct subparser_state *subparser = parser_push(state, parse_properties);
 	subparser->destructor = properties_state_free;
 	struct properties_state *pstate = calloc(sizeof(struct properties_state), 1);
 	pstate->style_rule = style_rule;
@@ -37,8 +36,8 @@ struct subparser_state *push_properties_parser(struct parser_state *state,
 	return subparser;
 }
 
-void parse_properties(stylesheet_t *stylesheet,
-		struct parser_state *pstate, uint32_t ch) {
+void parse_properties(void *_css, struct parser_state *pstate, uint32_t ch) {
+	stylesheet_t *css = _css;
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct properties_state *state = subparser->state;
 	if (state->quotes) {
@@ -112,7 +111,7 @@ void parse_properties(stylesheet_t *stylesheet,
 			}
 			break;
 		case '}':
-			list_add(stylesheet->rules, state->style_rule);
+			list_add(css->rules, state->style_rule);
 			list_pop(pstate->parsers);
 			break;
 		case '\'': // Fallthrough

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "css.h"
+#include "parser.h"
 #include "util/list.h"
 #include "util/unicode.h"
 #include "util/errors.h"
@@ -16,13 +17,14 @@ stylesheet_t *css_parse(const char *source, errors_t **errs) {
 
 	struct parser_state state = { 0 };
 	state.errs = errs;
+	state.data = css;
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);
 		css_parse_ch(css, &state, ch);
 	}
 
-	parser_state_cleanup(&state);
+	parser_cleanup(&state);
 
 	return css;
 }

@@ -50,12 +50,12 @@ cleanup:
 	subparser->flags &= ~FLAG_WHITESPACE;
 }
 
-static void parse_selector_ch(stylesheet_t *stylesheet,
-	struct document_state *state, struct parser_state *pstate, uint32_t ch) {
+static void parse_selector_ch(struct document_state *state,
+		struct parser_state *pstate, uint32_t ch) {
 	switch (ch) {
 	case '{':
 		commit_selector(state, pstate);
-		push_properties_parser(pstate, state->style_rule);
+		push_properties(pstate, state->style_rule);
 		state->style_rule = NULL;
 		break;
 	case ',':
@@ -67,8 +67,7 @@ static void parse_selector_ch(stylesheet_t *stylesheet,
 	}
 }
 
-void parse_document(stylesheet_t *stylesheet,
-		struct parser_state *pstate, uint32_t ch) {
+void parse_document(void *_css, struct parser_state *pstate, uint32_t ch) {
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct document_state *state = subparser->state;
 
@@ -96,6 +95,6 @@ void parse_document(stylesheet_t *stylesheet,
 	}
 
 	if (state->selector) {
-		parse_selector_ch(stylesheet, state, pstate, ch);
+		parse_selector_ch(state, pstate, ch);
 	}
 }
