@@ -18,7 +18,7 @@ void node_free(sui_node_t *node) {
 		hashtable_iter(node->attributes, free_attr_iter, NULL);
 		hashtable_free(node->attributes);
 	}
-	if (node->impl->free) {
+	if (node->impl && node->impl->free) {
 		node->impl->free(node);
 	}
 }
