@@ -13,7 +13,8 @@ sui_node_t *sui_parse(const char *source, errors_t **errs) {
 
 	struct sui_parser_state sui_state = {
 		.node = node,
-		.depth = 0
+		.depth = 0,
+		.indent = INDENT_UNKNOWN
 	};
 
 	struct parser_state state;

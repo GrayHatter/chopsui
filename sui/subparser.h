@@ -7,9 +7,16 @@
 
 #define FLAG_COMMENTS 1
 
+enum indent_type {
+	INDENT_UNKNOWN,
+	INDENT_SPACES,
+	INDENT_TABS
+};
+
 struct sui_parser_state {
 	sui_node_t *node;
 	size_t depth;
+	enum indent_type indent;
 };
 
 sui_node_t *sui_node_create();
