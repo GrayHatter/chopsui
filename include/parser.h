@@ -1,6 +1,7 @@
 #ifndef _SUI_PARSER_H
 #define _SUI_PARSER_H
 
+#include <stdbool.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include "util/errors.h"
@@ -33,10 +34,14 @@ struct subparser_state {
 };
 
 void parser_error(struct parser_state *state, const char *fmt, ...);
+void parser_cleanup(struct parser_state *state);
 struct subparser_state *parser_push(struct parser_state *state,
 		subparser_t parser);
-void parser_append_ch(struct parser_state *state, uint32_t ch);
-void parser_cleanup(struct parser_state *state);
+void parser_push_ch(struct parser_state *state, uint32_t ch);
+uint32_t parser_pop_ch(struct parser_state *state);
+uint32_t parser_peek_ch(struct parser_state *state);
+uint32_t parser_far_peek_ch(struct parser_state *state, int offs);
+bool parser_buffer_empty(struct parser_state *state);
 
 /*
  * Initializes the parser state, sets the initial parser as specified, and

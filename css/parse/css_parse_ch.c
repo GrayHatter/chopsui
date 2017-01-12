@@ -22,15 +22,13 @@ int css_parse_ch(struct parser_state *state, uint32_t ch) {
 	}
 
 	if (!(subp->flags & FLAG_COMMENTS) && ch == '/') {
-		if (state->pending_tail == state->pending_head) {
-			--state->pending_tail;
-			state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
+		if (parser_buffer_empty(state)) {
+			parser_push_ch(state, ch);
 			return PARSER_DEFER;
 		}
-		if (state->pending[state->pending_tail] == '*') {
+		if (parser_peek_ch(state) == '*') {
 			parser_push(state, parse_comment);
-			++state->pending_tail;
-			state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
+			parser_pop_ch(state);
 			return PARSER_SKIP;
 		}
 	}

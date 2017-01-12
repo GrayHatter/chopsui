@@ -3,17 +3,15 @@
 #include "util/list.h"
 
 void parse_ch(struct parser_state *state, uint32_t ch) {
-	parser_append_ch(state, ch);
+	parser_push_ch(state, ch);
 
 	while (state->pending_tail != state->pending_head) {
 		struct subparser_state *subp;
-		subp = list_peek(state->parsers);
 
-		ch = state->pending[state->pending_tail++];
-		state->pending_tail %= sizeof(state->pending) / sizeof(uint32_t);
+		subp = list_peek(state->parsers);
+		ch = parser_pop_ch(state);
 
 		int r = state->iter(state, ch);
-
 		if (r == PARSER_CONTINUE) {
 			subp->parser(state, ch);
 		} else if (r == PARSER_DEFER) {
