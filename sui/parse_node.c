@@ -94,9 +94,14 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 							"Inconsistent indentation width is not permitted");
 				}
 				if (depth < state->depth) {
-					// TODO
+					push_indent(state, pstate, depth);
+					parser_push_ch(pstate, ch);
+					state->parent = state->parent->parent;
+					state->node = NULL;
+					--state->depth;
+					parser_pop(pstate);
 				} else if (depth > state->depth) {
-					if (depth == state->depth + 2) {
+					if (depth != state->depth + 1) {
 						parser_error(pstate,
 								"Multiple indents where one was expected");
 					}
@@ -107,6 +112,7 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 					} else {
 						state->parent = state->root;
 					}
+					nstate->depth = 0;
 					state->depth = depth;
 					state->node = NULL;
 					push_indent(state, pstate, depth);

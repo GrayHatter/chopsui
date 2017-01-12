@@ -37,20 +37,35 @@ static int test_id() {
 }
 
 static int test_children() {
-	sui_node_t *node = sui_parse(
+	sui_node_t *root = sui_parse(
 			"test\n"
 			"\tfoo\n"
 			"\tbar\n"
-			"\t\tbaz",
+			"\t\tbaz\n"
+			"\t\t\tzab\n"
+			"\trab",
 			NULL);
-	assert(node && strcmp(node->type, "test") == 0);
-	assert(node->children->length == 2);
-	sui_node_t *n = node->children->items[0];
+	assert(root && strcmp(root->type, "test") == 0);
+	assert(root->children->length == 3);
+
+	sui_node_t *n = root->children->items[0];
 	assert(n && strcmp(n->type, "foo") == 0);
-	n = node->children->items[1];
+
+	n = root->children->items[1];
 	assert(n && strcmp(n->type, "bar") == 0);
 	assert(n->children->length == 1);
-	node_free(node);
+
+	n = n->children->items[0];
+	assert(n && strcmp(n->type, "baz") == 0);
+	assert(n->children->length == 1);
+
+	n = n->children->items[0];
+	assert(n && strcmp(n->type, "zab") == 0);
+
+	n = root->children->items[2];
+	assert(n && strcmp(n->type, "rab") == 0);
+
+	node_free(root);
 	return 0;
 }
 
