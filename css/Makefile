@@ -10,9 +10,11 @@ OBJECTS=css/color_parse.o \
 		css/stylesheet_free.o \
 		css/style_rule_free.o \
 		css/scalar_normalize.o \
-		css/selector_print.o
-
-include css/parse/Makefile
+		css/selector_print.o \
+		css/css_parse_ch.o \
+		css/parse_comment.o \
+		css/parse_document.o \
+		css/parse_properties.o
 
 css/css.a: $(OBJECTS)
 	$(AR) $(ARFLAGS) $@ $?

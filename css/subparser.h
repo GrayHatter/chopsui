@@ -1,11 +1,8 @@
-#ifndef _SUI_CSS_PARSE_H
-#define _SUI_CSS_PARSE_H
+#ifndef _SUI_CSS_SUBPARSER_H
+#define _SUI_CSS_SUBPARSER_H
 
-#include <stdarg.h>
 #include <stdint.h>
 #include "parser.h"
-#include "util/list.h"
-#include "util/errors.h"
 #include "css.h"
 
 #define FLAG_WHITESPACE 1

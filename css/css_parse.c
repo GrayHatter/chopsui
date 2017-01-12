@@ -4,10 +4,10 @@
 #include <ctype.h>
 #include "css.h"
 #include "parser.h"
+#include "subparser.h"
 #include "util/list.h"
 #include "util/unicode.h"
 #include "util/errors.h"
-#include "parse/parse.h"
 
 stylesheet_t *css_parse(const char *source, errors_t **errs) {
 	stylesheet_t *css = calloc(1, sizeof(stylesheet_t));

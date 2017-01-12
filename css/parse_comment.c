@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "parse.h"
+#include "subparser.h"
 #include "util/list.h"
 
 void parse_comment(struct parser_state *pstate, uint32_t ch) {
