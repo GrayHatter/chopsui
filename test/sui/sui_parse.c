@@ -7,14 +7,18 @@
 char *test_name = "sui/sui_parse";
 
 static int test_type() {
-	sui_node_t *node = sui_parse("test", NULL);
+	errors_t *errs = NULL;
+	sui_node_t *node = sui_parse("test", &errs);
+	assert(!errs);
 	assert(node && strcmp(node->type, "test") == 0);
 	node_free(node);
 	return 0;
 }
 
 static int test_class() {
-	sui_node_t *node = sui_parse("test .foo", NULL);
+	errors_t *errs = NULL;
+	sui_node_t *node = sui_parse("test .foo", &errs);
+	assert(!errs);
 	assert(node && strcmp(node->type, "test") == 0);
 	assert(node_has_class(node, "foo"));
 	node_free(node);
@@ -29,7 +33,9 @@ static int test_class() {
 }
 
 static int test_id() {
-	sui_node_t *node = sui_parse("test @foo", NULL);
+	errors_t *errs = NULL;
+	sui_node_t *node = sui_parse("test @foo", &errs);
+	assert(!errs);
 	assert(node && strcmp(node->type, "test") == 0);
 	assert(strcmp(node->id, "foo") == 0);
 	node_free(node);
@@ -37,14 +43,16 @@ static int test_id() {
 }
 
 static int test_children() {
+	errors_t *errs = NULL;
 	sui_node_t *root = sui_parse(
 			"test\n"
 			"\tfoo\n"
 			"\tbar\n"
 			"\t\tbaz\n"
 			"\t\t\tzab\n"
-			"\trab",
-			NULL);
+			"\trab", &errs);
+	assert(!errs);
+
 	assert(root && strcmp(root->type, "test") == 0);
 	assert(root->children->length == 3);
 
