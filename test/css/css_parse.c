@@ -4,7 +4,7 @@
 #include "test.h"
 #include "css.h"
 
-char *test_name = "parse/css_parse";
+char *test_name = "css/css_parse";
 
 static int test_comments() {
 	stylesheet_t *ss = css_parse("/* this should cause\n"

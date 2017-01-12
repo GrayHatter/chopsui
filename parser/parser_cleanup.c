@@ -7,7 +7,7 @@ void parser_cleanup(struct parser_state *state) {
 	if (!state->parsers) {
 		return;
 	}
-	for (size_t i = 0; i < state->parsers->length; ++i) {
+	for (int i = state->parsers->length - 1; i >= 0; --i) {
 		struct subparser_state *s = state->parsers->items[i];
 		if (s->destructor) {
 			s->destructor(s->state);

@@ -9,10 +9,9 @@
 #include "util/unicode.h"
 
 sui_node_t *sui_parse(const char *source, errors_t **errs) {
-	sui_node_t *node = sui_node_create();
-
 	struct sui_parser_state sui_state = {
-		.node = node,
+		.parent = NULL,
+		.node = NULL,
 		.depth = 0,
 		.indent = INDENT_UNKNOWN
 	};
@@ -29,5 +28,10 @@ sui_node_t *sui_parse(const char *source, errors_t **errs) {
 	}
 
 	parser_cleanup(&state);
-	return node;
+
+	if (!sui_state.node) {
+		parser_error(&state, "No valid nodes found");
+	}
+
+	return sui_state.node;
 }

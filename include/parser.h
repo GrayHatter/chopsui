@@ -37,6 +37,7 @@ void parser_error(struct parser_state *state, const char *fmt, ...);
 void parser_cleanup(struct parser_state *state);
 struct subparser_state *parser_push(struct parser_state *state,
 		subparser_t parser);
+void parser_pop(struct parser_state *state);
 void parser_push_ch(struct parser_state *state, uint32_t ch);
 uint32_t parser_pop_ch(struct parser_state *state);
 uint32_t parser_peek_ch(struct parser_state *state);

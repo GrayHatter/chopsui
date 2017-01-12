@@ -112,7 +112,8 @@ void parse_properties(struct parser_state *pstate, uint32_t ch) {
 			break;
 		case '}':
 			list_add(css->rules, state->style_rule);
-			list_pop(pstate->parsers);
+			state->style_rule = NULL;
+			parser_pop(pstate);
 			break;
 		case '\'': // Fallthrough
 		case '"':

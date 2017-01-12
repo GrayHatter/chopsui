@@ -2,6 +2,7 @@ ARCHIVES+= parser/parser.a
 
 OBJECTS=parser/parser_error.o \
 		parser/push_parser.o \
+		parser/parser_pop.o \
 		parser/parser_push_ch.o \
 		parser/parser_pop_ch.o \
 		parser/parser_peek_ch.o \
