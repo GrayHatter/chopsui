@@ -14,7 +14,7 @@
 struct parser_state {
 	list_t *parsers;
 	int pending_head, pending_tail;
-	uint32_t pending[8];
+	uint32_t pending[64];
 	errors_t **errs;
 	int lineno, colno;
 	void *data;

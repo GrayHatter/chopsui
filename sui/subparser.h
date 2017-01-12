@@ -15,9 +15,11 @@ enum indent_type {
 };
 
 struct sui_parser_state {
+	sui_node_t *root;
 	sui_node_t *parent;
 	sui_node_t *node;
-	size_t depth;
+	int depth;
+	int width;
 	enum indent_type indent;
 };
 

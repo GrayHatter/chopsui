@@ -1,9 +1,14 @@
 #define _XOPEN_SOURCE 500
+#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <ctype.h>
 #include "tree.h"
 #include "subparser.h"
+
+struct node_state {
+	size_t depth;
+};
 
 static void commit_type(struct parser_state *pstate, const char *str) {
 	struct sui_parser_state *state = pstate->data;
@@ -28,22 +33,92 @@ static void commit_class(struct parser_state *pstate, const char *str) {
 	node_add_class(state->node, str);
 }
 
+static void push_indent(struct sui_parser_state *state,
+		struct parser_state *pstate, int depth) {
+	while (depth--) {
+		for (int i = 0; i < state->width; ++i) {
+			parser_push_ch(pstate, state->indent == INDENT_SPACES ? ' ' : '\t');
+		}
+	}
+}
+
 void parse_node(struct parser_state *pstate, uint32_t ch) {
+	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct sui_parser_state *state = pstate->data;
+	struct node_state *nstate = subparser->state;
+	if (!nstate) {
+		nstate = calloc(sizeof(*nstate), 1);
+		subparser->state = nstate;
+	}
+
 	if (!state->node) {
 		switch (ch) {
 		case '\t':
+			if (state->indent == INDENT_UNKNOWN) {
+				state->indent = INDENT_TABS;
+			}
+			if (state->indent == INDENT_SPACES) {
+				parser_error(pstate, "Mixed tabs and spaces are not permitted");
+			}
+			++nstate->depth;
+			break;
 		case ' ':
-			// TODO: depth
+			if (state->indent == INDENT_UNKNOWN) {
+				state->indent = INDENT_SPACES;
+			}
+			if (state->indent == INDENT_TABS) {
+				parser_error(pstate, "Mixed tabs and spaces are not permitted");
+			}
+			++nstate->depth;
 			break;
 		case '\n':
-			// TODO
+			nstate->depth = 0;
 			break;
 		default:
-			// Start new node and parse type
-			state->node = sui_node_create();
-			push_string_parser(pstate, commit_type);
-			parser_push_ch(pstate, ch);
+			if (nstate->depth == 0) {
+				if (state->root) {
+					parser_error(pstate, "Cannot have two root nodes");
+				} else {
+					state->node = sui_node_create();
+					state->root = state->node;
+					push_string_parser(pstate, commit_type);
+					parser_push_ch(pstate, ch);
+				}
+			} else {
+				if (state->width == -1) {
+					state->width = nstate->depth;
+				}
+				int depth = nstate->depth / state->width;
+				if (nstate->depth % state->width) {
+					parser_error(pstate,
+							"Inconsistent indentation width is not permitted");
+				}
+				if (depth < state->depth) {
+					// TODO
+				} else if (depth > state->depth) {
+					if (depth == state->depth + 2) {
+						parser_error(pstate,
+								"Multiple indents where one was expected");
+					}
+					// Child
+					if (state->parent) {
+						state->parent = state->parent->children->items[
+							state->parent->children->length - 1];
+					} else {
+						state->parent = state->root;
+					}
+					state->depth = depth;
+					state->node = NULL;
+					push_indent(state, pstate, depth);
+					parser_push_ch(pstate, ch);
+					parser_push(pstate, parse_node);
+				} else {
+					// Sibling
+					state->node = sui_node_create();
+					push_string_parser(pstate, commit_type);
+					parser_push_ch(pstate, ch);
+				}
+			}
 			break;
 		}
 	} else {
@@ -54,7 +129,11 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 			break;
 		case '\n':
 		case ',':
-			// TODO: Commit this node to the parent
+			if (state->parent) {
+				node_append_child(state->parent, state->node);
+			}
+			state->node = NULL;
+			nstate->depth = 0;
 			break;
 		case '.':
 			push_string_parser(pstate, commit_class);
