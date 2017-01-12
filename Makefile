@@ -10,6 +10,7 @@ CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter -Wno-missing-field-initializ
 include css/Makefile
 include node/Makefile
 include parser/Makefile
+include sui/Makefile
 include tree/Makefile
 include type/Makefile
 include util/Makefile

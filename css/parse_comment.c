@@ -1,6 +1,4 @@
-#include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include "subparser.h"
 #include "util/list.h"
 

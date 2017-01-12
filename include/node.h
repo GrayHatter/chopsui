@@ -2,7 +2,6 @@
 #define _SUI_NODE_H
 
 #include <stdbool.h>
-//#include "Yoga.h"
 //#include "util/bloom.h"
 #include "util/hashtable.h"
 #include "util/list.h"
@@ -10,9 +9,9 @@
 #include "type.h"
 
 struct sui_node {
-//	YGNodeRef layout_node;
 	struct sui_node *parent;
 
+	char *type;
 	char *id;
 	set_t *classes;          // char *
 	list_t *children;        // sui_node_t
