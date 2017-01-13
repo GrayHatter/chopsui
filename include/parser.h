@@ -45,11 +45,11 @@ uint32_t parser_far_peek_ch(struct parser_state *state, int offs);
 bool parser_buffer_empty(struct parser_state *state);
 
 /*
- * Initializes the parser state, sets the initial parser as specified, and
- * configures the grammar-specific iter function.
+ * Initializes the parser state and configures the grammar-specific iter
+ * function. You must push an initial subparser with parser_push before
+ * attempting to parse anything.
  */
-void parser_init(struct parser_state *state, subparser_t initial_parser,
-		parser_iter_t iter);
+void parser_init(struct parser_state *state, parser_iter_t iter);
 
 /*
  * Runs one iteration of the parser loop with the given character. Will invoke

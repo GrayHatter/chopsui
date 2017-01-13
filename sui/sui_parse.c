@@ -23,7 +23,8 @@ sui_node_t *sui_parse(const char *source, errors_t **errs) {
 	memset(&state, 0, sizeof(state));
 	state.errs = errs;
 	state.data = &sui_state;
-	parser_init(&state, parse_node, sui_parse_ch);
+	parser_init(&state, sui_parse_ch);
+	parser_push(&state, parse_node);
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);

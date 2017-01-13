@@ -19,7 +19,8 @@ stylesheet_t *css_parse(const char *source, errors_t **errs) {
 	memset(&state, 0, sizeof(state));
 	state.errs = errs;
 	state.data = css;
-	parser_init(&state, parse_document, css_parse_ch);
+	parser_init(&state, css_parse_ch);
+	parser_push(&state, parse_document);
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);
