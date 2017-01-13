@@ -16,7 +16,8 @@ enum string_type {
 struct string_state {
 	str_t *str;
 	enum string_type type;
-	void (*commit)(struct parser_state *, const char *);
+	void (*commit)(void *, const char *);
+	void *state;
 	struct parser_state *pstate;
 };
 
@@ -25,17 +26,18 @@ void string_state_free(void *_state) {
 	if (!state) return;
 	if (state->str && state->commit) {
 		// Commit the string at EOF
-		state->commit(state->pstate, state->str->str);
+		state->commit(state->state, state->str->str);
 	}
 	str_free(state->str);
 	free(state);
 }
 
 struct subparser_state *push_string_parser(struct parser_state *pstate,
-		void (*commit)(struct parser_state *, const char *)) {
+		void *state, void (*commit)(void *, const char *)) {
 	struct subparser_state *subparser = parser_push(pstate, parse_string);
 	subparser->destructor = string_state_free;
 	struct string_state *sstate = calloc(sizeof(struct string_state), 1);
+	sstate->state = state;
 	sstate->pstate = pstate;
 	sstate->commit = commit;
 	subparser->state = sstate;

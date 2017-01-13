@@ -12,8 +12,6 @@
 sui_node_t *sui_parse(const char *source, errors_t **errs) {
 	struct sui_parser_state sui_state = {
 		.root = NULL,
-		.parent = NULL,
-		.node = NULL,
 		.depth = 0,
 		.width = -1,
 		.indent = INDENT_UNKNOWN
@@ -24,7 +22,7 @@ sui_node_t *sui_parse(const char *source, errors_t **errs) {
 	state.errs = errs;
 	state.data = &sui_state;
 	parser_init(&state, sui_parse_ch);
-	parser_push(&state, parse_node);
+	push_node_parser(&state, NULL);
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);
@@ -35,9 +33,6 @@ sui_node_t *sui_parse(const char *source, errors_t **errs) {
 
 	if (!sui_state.root) {
 		parser_error(&state, "No valid nodes found");
-	}
-	if (sui_state.node && sui_state.parent) {
-		node_append_child(sui_state.parent, sui_state.node);
 	}
 
 	return sui_state.root;

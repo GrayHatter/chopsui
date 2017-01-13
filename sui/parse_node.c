@@ -8,29 +8,30 @@
 
 struct node_state {
 	size_t depth;
+	struct parser_state *pstate;
+	sui_node_t *parent;
+	sui_node_t *node;
 };
 
-static void commit_type(struct parser_state *pstate, const char *str) {
-	struct sui_parser_state *state = pstate->data;
-	if (state->node->type) {
-		parser_error(pstate, "Node cannot have two types");
-	} else {
-		state->node->type = strdup(str);
+static void node_state_free(void *_state) {
+	struct node_state *state = _state;
+	if (!state) return;
+	if (!state->node) return;
+	if (state->parent) {
+		node_append_child(state->parent, state->node);
 	}
+	free(state);
 }
 
-static void commit_id(struct parser_state *pstate, const char *str) {
-	struct sui_parser_state *state = pstate->data;
-	if (state->node->id) {
-		parser_error(pstate, "Node cannot have two IDs");
-	} else {
-		state->node->id = strdup(str);
-	}
-}
-
-static void commit_class(struct parser_state *pstate, const char *str) {
-	struct sui_parser_state *state = pstate->data;
-	node_add_class(state->node, str);
+struct subparser_state *push_node_parser(struct parser_state *pstate,
+		sui_node_t *parent) {
+	struct subparser_state *subp = parser_push(pstate, parse_node);
+	struct node_state *state = calloc(sizeof(struct node_state), 1);
+	state->parent = parent;
+	state->pstate = pstate;
+	subp->state = state;
+	subp->destructor = node_state_free;
+	return subp;
 }
 
 static void push_indent(struct sui_parser_state *state,
@@ -42,86 +43,102 @@ static void push_indent(struct sui_parser_state *state,
 	}
 }
 
+static void commit_type(void *_state, const char *str) {
+	struct node_state *state = _state;
+	if (state->node->type) {
+		parser_error(state->pstate, "Node cannot have two types");
+	} else {
+		state->node->type = strdup(str);
+	}
+}
+
+static void commit_id(void *_state, const char *str) {
+	struct node_state *state = _state;
+	if (state->node->id) {
+		parser_error(state->pstate, "Node cannot have two IDs");
+	} else {
+		state->node->id = strdup(str);
+	}
+}
+
+static void commit_class(void *_state, const char *str) {
+	struct node_state *state = _state;
+	node_add_class(state->node, str);
+}
+
 void parse_node(struct parser_state *pstate, uint32_t ch) {
 	struct subparser_state *subparser = list_peek(pstate->parsers);
-	struct sui_parser_state *state = pstate->data;
-	struct node_state *nstate = subparser->state;
-	if (!nstate) {
-		nstate = calloc(sizeof(*nstate), 1);
-		subparser->state = nstate;
-	}
+	struct sui_parser_state *sui_state = pstate->data;
+	struct node_state *state = subparser->state;
 
 	if (!state->node) {
 		switch (ch) {
 		case '\t':
-			if (state->indent == INDENT_UNKNOWN) {
-				state->indent = INDENT_TABS;
+			if (sui_state->indent == INDENT_UNKNOWN) {
+				sui_state->indent = INDENT_TABS;
 			}
-			if (state->indent == INDENT_SPACES) {
+			if (sui_state->indent == INDENT_SPACES) {
 				parser_error(pstate, "Mixed tabs and spaces are not permitted");
 			}
-			++nstate->depth;
+			++state->depth;
 			break;
 		case ' ':
-			if (state->indent == INDENT_UNKNOWN) {
-				state->indent = INDENT_SPACES;
+			if (sui_state->indent == INDENT_UNKNOWN) {
+				sui_state->indent = INDENT_SPACES;
 			}
-			if (state->indent == INDENT_TABS) {
+			if (sui_state->indent == INDENT_TABS) {
 				parser_error(pstate, "Mixed tabs and spaces are not permitted");
 			}
-			++nstate->depth;
+			++state->depth;
 			break;
 		case '\n':
-			nstate->depth = 0;
+			state->depth = 0;
 			break;
 		default:
-			if (nstate->depth == 0) {
-				if (state->root) {
+			if (state->depth == 0) {
+				if (sui_state->root) {
 					parser_error(pstate, "Cannot have two root nodes");
 				} else {
 					state->node = sui_node_create();
-					state->root = state->node;
-					push_string_parser(pstate, commit_type);
+					sui_state->root = state->node;
+					push_string_parser(pstate, state, commit_type);
 					parser_push_ch(pstate, ch);
 				}
 			} else {
-				if (state->width == -1) {
-					state->width = nstate->depth;
+				if (sui_state->width == -1) {
+					sui_state->width = state->depth;
 				}
-				int depth = nstate->depth / state->width;
-				if (nstate->depth % state->width) {
+				int depth = state->depth / sui_state->width;
+				if (state->depth % sui_state->width) {
 					parser_error(pstate,
 							"Inconsistent indentation width is not permitted");
 				}
-				if (depth < state->depth) {
-					push_indent(state, pstate, depth);
+				if (depth < sui_state->depth) {
+					push_indent(sui_state, pstate, depth);
 					parser_push_ch(pstate, ch);
-					state->parent = state->parent->parent;
-					state->node = NULL;
-					--state->depth;
+					--sui_state->depth;
 					parser_pop(pstate);
-				} else if (depth > state->depth) {
-					if (depth != state->depth + 1) {
+				} else if (depth > sui_state->depth) {
+					if (depth != sui_state->depth + 1) {
 						parser_error(pstate,
 								"Multiple indents where one was expected");
 					}
 					// Child
+					sui_node_t *parent;
 					if (state->parent) {
-						state->parent = state->parent->children->items[
-							state->parent->children->length - 1];
+						parent = list_peek(state->parent->children);
 					} else {
-						state->parent = state->root;
+						parent = sui_state->root;
 					}
-					nstate->depth = 0;
-					state->depth = depth;
-					state->node = NULL;
-					push_indent(state, pstate, depth);
+					state->depth = 0;
+					sui_state->depth = depth;
+					push_indent(sui_state, pstate, depth);
 					parser_push_ch(pstate, ch);
-					parser_push(pstate, parse_node);
+					push_node_parser(pstate, parent);
 				} else {
 					// Sibling
 					state->node = sui_node_create();
-					push_string_parser(pstate, commit_type);
+					push_string_parser(pstate, state, commit_type);
 					parser_push_ch(pstate, ch);
 				}
 			}
@@ -139,13 +156,13 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 				node_append_child(state->parent, state->node);
 			}
 			state->node = NULL;
-			nstate->depth = 0;
+			state->depth = 0;
 			break;
 		case '.':
-			push_string_parser(pstate, commit_class);
+			push_string_parser(pstate, state, commit_class);
 			break;
 		case '@':
-			push_string_parser(pstate, commit_id);
+			push_string_parser(pstate, state, commit_id);
 			break;
 		case '[':
 			// TODO:
