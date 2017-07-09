@@ -1,9 +1,10 @@
+#include <stdio.h>
 #include <stdint.h>
 #include "parser.h"
 #include "util/list.h"
 
 void parse_ch(struct parser_state *state, uint32_t ch) {
-	parser_push_ch(state, ch);
+	parser_push_ch(state, ch, true);
 
 	while (state->pending_tail != state->pending_head) {
 		struct subparser_state *subp;

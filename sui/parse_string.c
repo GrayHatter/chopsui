@@ -76,7 +76,7 @@ void parse_string(struct parser_state *pstate, uint32_t ch) {
 
 	if (commit) {
 		parser_pop(pstate);
-		parser_push_ch(pstate, ch);
+		parser_push_ch(pstate, ch, false);
 	} else {
 		str_append_ch(state->str, ch);
 	}
