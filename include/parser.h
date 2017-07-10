@@ -39,9 +39,7 @@ struct subparser_state *parser_push(struct parser_state *state,
 		subparser_t parser);
 void parser_pop(struct parser_state *state);
 // Note: do not push characters that were never in the document
-// Set original to true if this is the first time this character is being pushed
-// into the parser.
-void parser_push_ch(struct parser_state *state, uint32_t ch, bool original);
+void parser_push_ch(struct parser_state *state, uint32_t ch);
 uint32_t parser_pop_ch(struct parser_state *state);
 uint32_t parser_peek_ch(struct parser_state *state);
 uint32_t parser_far_peek_ch(struct parser_state *state, int offs);

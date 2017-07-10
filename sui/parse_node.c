@@ -38,8 +38,7 @@ static void push_indent(struct sui_parser_state *state,
 		struct parser_state *pstate, int depth) {
 	while (depth--) {
 		for (int i = 0; i < state->width; ++i) {
-			parser_push_ch(pstate, state->indent == INDENT_SPACES ? ' ' : '\t',
-					false);
+			parser_push_ch(pstate, state->indent == INDENT_SPACES ? ' ' : '\t');
 		}
 	}
 }
@@ -103,7 +102,7 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 					state->node = sui_node_create();
 					sui_state->root = state->node;
 					push_string_parser(pstate, state, commit_type);
-					parser_push_ch(pstate, ch, false);
+					parser_push_ch(pstate, ch);
 				}
 			} else {
 				if (sui_state->width == -1) {
@@ -116,7 +115,7 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 				}
 				if (depth < sui_state->depth) {
 					push_indent(sui_state, pstate, depth);
-					parser_push_ch(pstate, ch, false);
+					parser_push_ch(pstate, ch);
 					--sui_state->depth;
 					parser_pop(pstate);
 				} else if (depth > sui_state->depth) {
@@ -134,13 +133,13 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 					state->depth = 0;
 					sui_state->depth = depth;
 					push_indent(sui_state, pstate, depth);
-					parser_push_ch(pstate, ch, false);
+					parser_push_ch(pstate, ch);
 					push_node_parser(pstate, parent);
 				} else {
 					// Sibling
 					state->node = sui_node_create();
 					push_string_parser(pstate, state, commit_type);
-					parser_push_ch(pstate, ch, false);
+					parser_push_ch(pstate, ch);
 				}
 			}
 			break;
@@ -176,7 +175,7 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 		default:
 			// TODO:
 			// push_attribute_parser(pstate);
-			// parser_push_ch(pstate, ch, false);
+			// parser_push_ch(pstate, ch);
 			break;
 		}
 	}
