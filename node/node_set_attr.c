@@ -5,8 +5,10 @@
 #include "node.h"
 
 void node_set_attr(sui_node_t *node, const char *key, const char *value) {
-	free(hashtable_set(node->attributes, key, strdup(value)));
 	if (node->impl && node->impl->attr) {
-		node->impl->attr(node, key, value);
+		if (!node->impl->attr(node, key, value)) {
+			return;
+		}
 	}
+	free(hashtable_set(node->attributes, key, strdup(value)));
 }
