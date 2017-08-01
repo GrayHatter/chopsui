@@ -23,6 +23,11 @@ struct sui_type_impl {
 	 */
 	uint64_t (*attr_spec)(sui_node_t *node, const char *key);
 	/**
+	 * Return the default value for this attribute, or NULL. We take ownership
+	 * over the value you give us, we'll free it.
+	 */
+	struct sui_scalar *(*attr_default)(const char *key);
+	/**
 	 * Invoked when a child is added to this node. Return false to prevent the
 	 * child from being added and raise an error.
 	 */
