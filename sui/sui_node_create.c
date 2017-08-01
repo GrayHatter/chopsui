@@ -5,8 +5,8 @@
 #include "util/list.h"
 #include "util/set.h"
 
-sui_node_t *sui_node_create() {
-	sui_node_t *node = calloc(sizeof(sui_node_t), 1);
+struct sui_node *sui_node_create() {
+	struct sui_node *node = calloc(sizeof(struct sui_node), 1);
 	if (!node) {
 		return node;
 	}

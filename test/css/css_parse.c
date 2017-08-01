@@ -7,7 +7,7 @@
 char *test_name = "css/css_parse";
 
 static int test_comments() {
-	stylesheet_t *ss = css_parse("/* this should cause\n"
+	struct stylesheet *ss = css_parse("/* this should cause\n"
 			"a syntax error if comments aren't being handled\n"
 			"correctly. */", NULL);
 	stylesheet_free(ss);
@@ -15,11 +15,11 @@ static int test_comments() {
 }
 
 static int test_selector() {
-	stylesheet_t *ss = css_parse("foo .bar { }", NULL);
+	struct stylesheet *ss = css_parse("foo .bar { }", NULL);
 	assert(ss->rules->length == 1);
-	style_rule_t *rule = ss->rules->items[0];
+	struct style_rule *rule = ss->rules->items[0];
 	assert(rule && rule->selectors->length == 1);
-	selector_t *selector = rule->selectors->items[0];
+	struct selector *selector = rule->selectors->items[0];
 	assert(selector && selector->type == SELECTOR_TYPE);
 	selector = selector->next;
 	assert(selector && selector->type == SELECTOR_DESCENDANT);
@@ -31,12 +31,12 @@ static int test_selector() {
 }
 
 static int test_multiple_rules() {
-	stylesheet_t *ss = css_parse("foo { } bar { }", NULL);
+	struct stylesheet *ss = css_parse("foo { } bar { }", NULL);
 	assert(ss->rules->length == 2);
 
-	style_rule_t *rule = ss->rules->items[0];
+	struct style_rule *rule = ss->rules->items[0];
 	assert(rule && rule->selectors->length == 1);
-	selector_t *selector = rule->selectors->items[0];
+	struct selector *selector = rule->selectors->items[0];
 	assert(selector && selector->type == SELECTOR_TYPE);
 
 	rule = ss->rules->items[1];
@@ -49,12 +49,12 @@ static int test_multiple_rules() {
 }
 
 static int test_multiple_selectors() {
-	stylesheet_t *ss = css_parse("foo, bar { }", NULL);
+	struct stylesheet *ss = css_parse("foo, bar { }", NULL);
 	assert(ss->rules->length == 1);
 
-	style_rule_t *rule = ss->rules->items[0];
+	struct style_rule *rule = ss->rules->items[0];
 	assert(rule && rule->selectors->length == 2);
-	selector_t *selector = rule->selectors->items[0];
+	struct selector *selector = rule->selectors->items[0];
 	assert(selector && selector->type == SELECTOR_TYPE);
 	assert(strcmp(selector->value, "foo") == 0);
 	assert(!selector->next);
@@ -69,10 +69,10 @@ static int test_multiple_selectors() {
 }
 
 static int test_properties() {
-	stylesheet_t *ss = css_parse("foo { background: red; }", NULL);
+	struct stylesheet *ss = css_parse("foo { background: red; }", NULL);
 	assert(ss->rules->length == 1);
 
-	style_rule_t *rule = ss->rules->items[0];
+	struct style_rule *rule = ss->rules->items[0];
 	assert(rule);
 
 	char *value = hashtable_get(rule->properties, "background");
@@ -83,13 +83,13 @@ static int test_properties() {
 }
 
 static int test_multi_properties() {
-	stylesheet_t *ss = css_parse("foo { \n"
+	struct stylesheet *ss = css_parse("foo { \n"
 			"\tbackground: red;\n"
 			"\tfont-weight: bold;\n"
 			"}", NULL);
 	assert(ss->rules->length == 1);
 
-	style_rule_t *rule = ss->rules->items[0];
+	struct style_rule *rule = ss->rules->items[0];
 	assert(rule);
 
 	char *value = hashtable_get(rule->properties, "background");
@@ -103,13 +103,13 @@ static int test_multi_properties() {
 }
 
 static int test_quoted_properties() {
-	stylesheet_t *ss = css_parse("foo { \n"
+	struct stylesheet *ss = css_parse("foo { \n"
 			"\ttext: \"hello: {world};!\";\n"
 			"\theader: '/*hello*/: \\'world\\';!';\n"
 			"}", NULL);
 	assert(ss->rules->length == 1);
 
-	style_rule_t *rule = ss->rules->items[0];
+	struct style_rule *rule = ss->rules->items[0];
 	assert(rule);
 
 	char *value = hashtable_get(rule->properties, "text");
@@ -124,7 +124,7 @@ static int test_quoted_properties() {
 
 static int test_errors() {
 	errors_t *errors = NULL;
-	stylesheet_t *ss = css_parse("\n{ test }", &errors);
+	struct stylesheet *ss = css_parse("\n{ test }", &errors);
 	assert(errors);
 	assert(errors->length == 1);
 	assert(strcmp((char *)errors->items[0],

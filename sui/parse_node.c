@@ -9,8 +9,8 @@
 struct node_state {
 	size_t depth;
 	struct parser_state *pstate;
-	sui_node_t *parent;
-	sui_node_t *node;
+	struct sui_node *parent;
+	struct sui_node *node;
 };
 
 static void node_state_free(void *_state) {
@@ -24,7 +24,7 @@ static void node_state_free(void *_state) {
 }
 
 struct subparser_state *push_node_parser(struct parser_state *pstate,
-		sui_node_t *parent) {
+		struct sui_node *parent) {
 	struct subparser_state *subp = parser_push(pstate, parse_node);
 	struct node_state *state = calloc(sizeof(struct node_state), 1);
 	state->parent = parent;
@@ -124,7 +124,7 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 								"Multiple indents where one was expected");
 					}
 					// Child
-					sui_node_t *parent;
+					struct sui_node *parent;
 					if (state->parent) {
 						parent = list_peek(state->parent->children);
 					} else {

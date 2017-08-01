@@ -5,7 +5,7 @@
 #include <ctype.h>
 #include "scalars.h"
 
-bool scalar_parse(const char *s, sui_scalar_t *scalar) {
+bool scalar_parse(const char *s, struct sui_scalar *scalar) {
 	char *unit;
 	if (strchr(s, '.')) {
 		scalar->fval = strtod(s, &unit);

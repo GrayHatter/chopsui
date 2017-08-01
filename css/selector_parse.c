@@ -5,7 +5,7 @@
 #include "util/unicode.h"
 #include "css.h"
 
-static bool parse_selector_atom(selector_t *current, const char **src) {
+static bool parse_selector_atom(struct selector *current, const char **src) {
 	if (!*src || !**src) {
 		return false;
 	}
@@ -49,13 +49,13 @@ finish:
 	return true;
 }
 
-selector_t *selector_parse(const char *src) {
+struct selector *selector_parse(const char *src) {
 	if (!*src) {
 		return NULL;
 	}
-	selector_t *current = calloc(sizeof(selector_t), 1);
-	selector_t *root = current;
-	selector_t *prev = NULL;
+	struct selector *current = calloc(sizeof(struct selector), 1);
+	struct selector *root = current;
+	struct selector *prev = NULL;
 	while (*src) {
 		uint32_t ch = utf8_decode(&src);
 		if (ch == UTF8_INVALID) {

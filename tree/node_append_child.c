@@ -2,7 +2,7 @@
 #include "node.h"
 #include "tree.h"
 
-int node_append_child(sui_node_t *parent, sui_node_t *child) {
+int node_append_child(struct sui_node *parent, struct sui_node *child) {
 	if (!child || !parent || child->parent != NULL) {
 		return 0;
 	}

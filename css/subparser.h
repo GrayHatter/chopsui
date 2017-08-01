@@ -16,6 +16,6 @@ void parse_document(struct parser_state *pstate, uint32_t ch);
 void parse_properties(struct parser_state *pstate, uint32_t ch);
 
 struct subparser_state *push_properties(struct parser_state *state,
-		style_rule_t *style_rule);
+		struct style_rule *style_rule);
 
 #endif

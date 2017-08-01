@@ -12,9 +12,9 @@
 
 struct document_state {
 	str_t *selector;
-	style_rule_t *style_rule;
-	media_rule_t *media_rule;
-	keyframes_t *keyframes;
+	struct style_rule *style_rule;
+	struct media_rule *media_rule;
+	struct keyframes *keyframes;
 };
 
 static void document_state_free(void *_state) {
@@ -29,13 +29,13 @@ static void document_state_free(void *_state) {
 static void commit_selector(struct document_state *state,
 		struct parser_state *pstate) {
 	struct subparser_state *subparser = list_peek(pstate->parsers);
-	selector_t *selector = selector_parse(state->selector->str);
+	struct selector *selector = selector_parse(state->selector->str);
 	if (!selector) {
 		parser_error(pstate, "Invalid selector '%s'", state->selector->str);
 		goto cleanup;
 	}
 	if (!state->style_rule) {
-		state->style_rule = calloc(sizeof(style_rule_t), 1);
+		state->style_rule = calloc(sizeof(struct style_rule), 1);
 	}
 	if (!state->style_rule->selectors) {
 		state->style_rule->selectors = list_create();

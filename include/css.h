@@ -41,22 +41,20 @@ struct selector {
 	char *attr_value;
 };
 
-typedef struct selector selector_t;
-
 /**
  * Parses a selector string and returns a new selector. Returns NULL on error.
  */
-selector_t *selector_parse(const char *source);
+struct selector *selector_parse(const char *source);
 
 /**
  * Frees a selector.
  */
-void selector_free(selector_t *selector);
+void selector_free(struct selector *selector);
 
 /**
  * Prints a selector.
  */
-void selector_print(selector_t *selector, bool pretty,
+void selector_print(struct selector *selector, bool pretty,
 		void (*putch)(uint32_t ch));
 
 struct style_rule {
@@ -64,9 +62,7 @@ struct style_rule {
 	hashtable_t *properties;
 };
 
-typedef struct style_rule style_rule_t;
-
-void style_rule_free(style_rule_t *style_rule);
+void style_rule_free(struct style_rule *style_rule);
 
 enum media_rule_feature {
 	MEDIA_FEAT_WIDTH,
@@ -93,16 +89,14 @@ struct media_rule {
 	enum media_rule_feature feature;
 	enum media_rule_type type;
 	enum media_rule_operator operator;
-	sui_scalar_t scalar;
+	struct sui_scalar scalar;
 	struct media_rule *next;
 };
 
-typedef struct media_rule media_rule_t;
-
-void media_rule_free(media_rule_t *media_rule);
+void media_rule_free(struct media_rule *media_rule);
 
 struct keyframe {
-	sui_scalar_t at;
+	struct sui_scalar at;
 	list_t *rules;
 };
 
@@ -111,9 +105,7 @@ struct keyframes {
 	list_t *keys;
 };
 
-typedef struct keyframes keyframes_t;
-
-void keyframes_free(keyframes_t *keyframes);
+void keyframes_free(struct keyframes *keyframes);
 
 struct stylesheet {
 	list_t *rules;
@@ -121,10 +113,8 @@ struct stylesheet {
 	list_t *keyframes;
 };
 
-typedef struct stylesheet stylesheet_t;
-
-stylesheet_t *css_parse(const char *source, errors_t **errs);
-stylesheet_t *css_load(FILE *source, errors_t **errs);
-void stylesheet_free(stylesheet_t *stylesheet);
+struct stylesheet *css_parse(const char *source, errors_t **errs);
+struct stylesheet *css_load(FILE *source, errors_t **errs);
+void stylesheet_free(struct stylesheet *stylesheet);
 
 #endif

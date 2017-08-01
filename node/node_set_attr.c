@@ -4,7 +4,7 @@
 #include "util/hashtable.h"
 #include "node.h"
 
-void node_set_attr(sui_node_t *node, const char *key, const char *value) {
+void node_set_attr(struct sui_node *node, const char *key, const char *value) {
 	if (node->impl && node->impl->attr) {
 		if (!node->impl->attr(node, key, value)) {
 			return;

@@ -34,12 +34,10 @@ struct sui_scalar {
 	};
 };
 
-typedef struct sui_scalar sui_scalar_t;
-
 /**
  * Parses a CSS scalar string into a sui_scalar_t
  */
-bool scalar_parse(const char *s, sui_scalar_t *scalar);
+bool scalar_parse(const char *s, struct sui_scalar *scalar);
 
 /**
  * Parses a CSS color string into a uint32_t
@@ -52,7 +50,7 @@ struct display_info {
 };
 
 /**
- * Normalizes the units of a sui_scalar_t, optionally normalizing pixels with
+ * Normalizes the units of a sui_scalar, optionally normalizing pixels with
  * the provided display information.
  *
  * The provided scalar will be reduced to the following units:
@@ -67,6 +65,6 @@ struct display_info {
  * - SCALAR_HZ
  * - SCALAR_COLOR
  */
-void scalar_normalize(sui_scalar_t *scalar, struct display_info *info);
+void scalar_normalize(struct sui_scalar *scalar, struct display_info *info);
 
 #endif

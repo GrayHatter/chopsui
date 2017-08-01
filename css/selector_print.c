@@ -9,7 +9,7 @@ static void sputs(void (*putch)(uint32_t ch), const char *s) {
 	}
 }
 
-void selector_print(selector_t *s, bool pretty,
+void selector_print(struct selector *s, bool pretty,
 		void (*putch)(uint32_t ch)) {
 	while (s) {
 		switch (s->type) {

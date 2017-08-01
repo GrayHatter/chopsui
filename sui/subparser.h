@@ -15,13 +15,13 @@ enum indent_type {
 };
 
 struct sui_parser_state {
-	sui_node_t *root;
+	struct sui_node *root;
 	int depth;
 	int width;
 	enum indent_type indent;
 };
 
-sui_node_t *sui_node_create();
+struct sui_node *sui_node_create();
 
 int sui_parse_ch(struct parser_state *state, uint32_t ch);
 
@@ -31,6 +31,6 @@ void parse_string(struct parser_state *pstate, uint32_t ch);
 struct subparser_state *push_string_parser(struct parser_state *pstate,
 		void *state, void (*commit)(void *, const char *));
 struct subparser_state *push_node_parser(struct parser_state *pstate,
-		sui_node_t *parent);
+		struct sui_node *parent);
 
 #endif

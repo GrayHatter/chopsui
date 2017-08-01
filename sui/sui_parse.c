@@ -9,7 +9,7 @@
 #include "util/errors.h"
 #include "util/unicode.h"
 
-sui_node_t *sui_parse(const char *source, errors_t **errs) {
+struct sui_node *sui_parse(const char *source, errors_t **errs) {
 	struct sui_parser_state sui_state = {
 		.root = NULL,
 		.depth = 0,

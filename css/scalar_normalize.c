@@ -3,7 +3,7 @@
 #include <math.h>
 #include "scalars.h"
 
-void scalar_normalize(sui_scalar_t *scalar, struct display_info *info) {
+void scalar_normalize(struct sui_scalar *scalar, struct display_info *info) {
 	switch (scalar->type) {
 	case SCALAR_EM:
 		if (info) {

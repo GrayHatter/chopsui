@@ -9,8 +9,8 @@
 #include "util/unicode.h"
 #include "util/errors.h"
 
-stylesheet_t *css_parse(const char *source, errors_t **errs) {
-	stylesheet_t *css = calloc(1, sizeof(stylesheet_t));
+struct stylesheet *css_parse(const char *source, errors_t **errs) {
+	struct stylesheet *css = calloc(1, sizeof(struct stylesheet));
 	css->rules = list_create();
 	css->media_rules = list_create();
 	css->keyframes = list_create();

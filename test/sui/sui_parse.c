@@ -8,7 +8,7 @@ char *test_name = "sui/sui_parse";
 
 static int test_type() {
 	errors_t *errs = NULL;
-	sui_node_t *node = sui_parse("test", &errs);
+	struct sui_node *node = sui_parse("test", &errs);
 	assert(!errs);
 	assert(node && strcmp(node->type, "test") == 0);
 	node_free(node);
@@ -17,7 +17,7 @@ static int test_type() {
 
 static int test_class() {
 	errors_t *errs = NULL;
-	sui_node_t *node = sui_parse("test .foo", &errs);
+	struct sui_node *node = sui_parse("test .foo", &errs);
 	assert(!errs);
 	assert(node && strcmp(node->type, "test") == 0);
 	assert(node_has_class(node, "foo"));
@@ -34,7 +34,7 @@ static int test_class() {
 
 static int test_id() {
 	errors_t *errs = NULL;
-	sui_node_t *node = sui_parse("test @foo", &errs);
+	struct sui_node *node = sui_parse("test @foo", &errs);
 	assert(!errs);
 	assert(node && strcmp(node->type, "test") == 0);
 	assert(strcmp(node->id, "foo") == 0);
@@ -52,7 +52,7 @@ static int test_id() {
 
 static int test_children() {
 	errors_t *errs = NULL;
-	sui_node_t *root = sui_parse(
+	struct sui_node *root = sui_parse(
 			"test\n"
 			"\tfoo\n"
 			"\tbar\n"
@@ -64,7 +64,7 @@ static int test_children() {
 	assert(root && strcmp(root->type, "test") == 0);
 	assert(root->children->length == 3);
 
-	sui_node_t *n = root->children->items[0];
+	struct sui_node *n = root->children->items[0];
 	assert(n && strcmp(n->type, "foo") == 0);
 
 	n = root->children->items[1];
@@ -87,7 +87,7 @@ static int test_children() {
 
 static int test_indentation_errors() {
 	errors_t *errs = NULL;
-	sui_node_t *root = sui_parse(
+	struct sui_node *root = sui_parse(
 			"test\n"
 			"  foo\n"
 			"   bar", &errs);

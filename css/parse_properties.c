@@ -10,7 +10,7 @@
 #include "util/string.h"
 
 struct properties_state {
-	style_rule_t *style_rule;
+	struct style_rule *style_rule;
 	str_t *key, *value;
 	bool escape;
 	uint32_t quotes;
@@ -26,7 +26,7 @@ static void properties_state_free(void *_state) {
 }
 
 struct subparser_state *push_properties(struct parser_state *state,
-		style_rule_t *style_rule) {
+		struct style_rule *style_rule) {
 	struct subparser_state *subparser = parser_push(state, parse_properties);
 	subparser->destructor = properties_state_free;
 	struct properties_state *pstate = calloc(sizeof(struct properties_state), 1);
@@ -37,7 +37,7 @@ struct subparser_state *push_properties(struct parser_state *state,
 }
 
 void parse_properties(struct parser_state *pstate, uint32_t ch) {
-	stylesheet_t *css = pstate->data;
+	struct stylesheet *css = pstate->data;
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct properties_state *state = subparser->state;
 	if (state->quotes) {
