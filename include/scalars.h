@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 enum scalar_type {
+	SCALAR_EMPTY,
 	SCALAR_INT,
 	SCALAR_FLOAT,
 	SCALAR_DPI,
@@ -20,17 +21,23 @@ enum scalar_type {
 	SCALAR_HZ,
 	SCALAR_KHZ,
 	SCALAR_COLOR,
+	SCALAR_BOOL,
+	SCALAR_CHAR,
+	SCALAR_VOID,
 };
 
 struct sui_scalar {
 	enum scalar_type type;
 	union {
+		bool bval;
 		double fval;
 		long ival;
 		unsigned long uval;
 		struct {
 			uint8_t a, b, g, r;
 		};
+		char *str;
+		void *data;
 	};
 };
 

@@ -30,6 +30,10 @@ void parse_string(struct parser_state *pstate, uint32_t ch);
 
 struct subparser_state *push_string_parser(struct parser_state *pstate,
 		void *state, void (*commit)(void *, const char *));
+
+struct subparser_state *push_attrib_parser(struct parser_state *pstate,
+		void *state, void (*commit)(void *, const char *, void *));
+
 struct subparser_state *push_node_parser(struct parser_state *pstate,
 		struct sui_node *parent);
 

@@ -66,6 +66,11 @@ static void commit_class(void *_state, const char *str) {
 	node_add_class(state->node, str);
 }
 
+static void commit_attrib(void *_state, const char *key, void *val) {
+	struct node_state *state = _state;
+	hashtable_set(state->node->attributes, key, val);
+}
+
 void parse_node(struct parser_state *pstate, uint32_t ch) {
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct sui_parser_state *sui_state = pstate->data;
@@ -173,9 +178,8 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 			// Parse inline children
 			break;
 		default:
-			// TODO:
-			// push_attribute_parser(pstate);
-			// parser_push_ch(pstate, ch);
+			push_attrib_parser(pstate, state, commit_attrib);
+			parser_push_ch(pstate, ch);
 			break;
 		}
 	}

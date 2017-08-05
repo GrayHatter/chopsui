@@ -1,8 +1,9 @@
 #include <string.h>
 #include <assert.h>
-#include "test.h"
+#include "../test.h"
 #include "node.h"
 #include "sui.h"
+#include "scalars.h"
 
 char *test_name = "sui/sui_parse";
 
@@ -112,11 +113,56 @@ static int test_indentation_errors() {
 	return 0;
 }
 
+static int test_attrib_types() {
+	errors_t *err = NULL;
+	struct sui_node *node = sui_parse("test\n"
+	                               "    some_node blerg=rip\n"
+	                               "    other_node blerg = something\n"
+	                               "    other_node2 blerg = something else", &err);
+
+	assert(!err);
+	assert(node && strcmp(node->type, "test") == 0);
+
+	assert(node->children);
+	assert(node->children->length == 3 && node->children->items);
+
+	struct sui_node *n = node->children->items[0];
+	assert(n && strcmp(n->type, "some_node") == 0);
+	assert(n->attributes->bucket_count);
+	struct sui_scalar *s = hashtable_get(n->attributes, "blerg");
+	assert(s);
+	assert(s->type == SCALAR_CHAR);
+	assert(strcmp(s->str, "rip") == 0);
+
+	n = node->children->items[1];
+	assert(n && strcmp(n->type, "other_node") == 0);
+	assert(n->attributes->bucket_count);
+	s = hashtable_get(n->attributes, "blerg");
+	assert(s);
+	assert(s->type == SCALAR_CHAR);
+	assert(strcmp(s->str, "something") == 0);
+
+	n = node->children->items[2];
+	assert(n && strcmp(n->type, "other_node2") == 0);
+	assert(n->attributes->bucket_count);
+	s = hashtable_get(n->attributes, "blerg");
+	assert(s);
+	assert(s->type == SCALAR_CHAR);
+	assert(strcmp(s->str, "something") == 0);
+	s = hashtable_get(n->attributes, "else");
+	assert(s);
+	assert(s->type == SCALAR_EMPTY);
+
+	node_free(node);
+	return 0;
+}
+
 int test_main() {
 	return test_type()
 		|| test_class()
 		|| test_id()
 		|| test_children()
 		|| test_indentation_errors()
+		|| test_attrib_types()
 	;
 }
