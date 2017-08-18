@@ -5,9 +5,16 @@ CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter -Wno-missing-field-initializ
 	-std=c11 -Iinclude/ -fPIC $(CFLAGS)
 BDIR:=.build
 
-$(BDIR)/%.o: %.c
+$(BDIR)/%.o: %.c $(BDIR)/%.d
 	@mkdir -p $(shell dirname $@)
 	$(CC) -c -o $@ $(INCLUDE) -I$(shell dirname $<) $(CFLAGS) $<
+	@$(CC) $(CFLAGS) -MF"$@.d" -MG -MM -MP -MT"$@" $<
+	@touch $@.d
+
+$(BDIR)/%.d: ;
+
+.PRECIOUS: $(BDIR)/%.d
+sinclude $(shell find $(BDIR) -name "*.d" 2>/dev/null || true)
 
 include css/Makefile
 include node/Makefile
