@@ -3,8 +3,10 @@ sinclude config.mk
 # -Wno-missing-field-initializers to stop clang from errorneously warning on struct = { 0 }
 CFLAGS:=-Wall -Wextra -Werror -Wno-unused-parameter -Wno-missing-field-initializers \
 	-std=c11 -Iinclude/ -fPIC $(CFLAGS)
+BDIR:=.build
 
-%.o: %.c
+$(BDIR)/%.o: %.c
+	@mkdir -p $(shell dirname $@)
 	$(CC) -c -o $@ $(INCLUDE) -I$(shell dirname $<) $(CFLAGS) $<
 
 include css/Makefile
@@ -15,15 +17,16 @@ include tree/Makefile
 include type/Makefile
 include util/Makefile
 
-libchopsui.so: $(ARCHIVES)
+$(BDIR)/libchopsui.so: $(ARCHIVES)
 	$(LD) -shared $(LDFLAGS) -o $@ $^
 
-libchopsui.a: $(ARCHIVES)
+$(BDIR)/libchopsui.a: $(ARCHIVES)
 	$(AR) $(ARFLAGS) $@ $^
 
-all: libchopsui.so libchopsui.a
+all: $(BDIR)/libchopsui.so $(BDIR)/libchopsui.a
 
 clean:
+	rm -rf .build
 	find . -name "*.o" -delete
 	find . -name "*.a" -delete
 	find . -name "*.so" -delete
@@ -32,7 +35,7 @@ clean:
 include test/Makefile
 
 check: $(TESTS)
-	@find test/ -type f -executable -exec \{\} \;
+	@find .build/ -name "test_*" -type f -executable -exec \{\} \;
 
 .PHONY: all clean check
 

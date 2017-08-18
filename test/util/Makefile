@@ -1,4 +1,4 @@
-test/util/test_unicode: test/main.c test/util/unicode.c $(ARCHIVES)
+$(BDIR)/test_unicode: test/main.c test/util/unicode.c $(ARCHIVES)
 	$(TESTCC) -o $@ $^ $(ARCHIVES)
 
-TESTS+=test/util/test_unicode
+TESTS+=$(BDIR)/test_unicode

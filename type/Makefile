@@ -1,8 +1,8 @@
-ARCHIVES+= type/type.a
+ARCHIVES+= $(BDIR)/type/type.a
 
-OBJECTS=type/impl.o
+OBJECTS=$(BDIR)/type/impl.o
 
-type/type.a: $(OBJECTS)
+$(BDIR)/type/type.a: $(OBJECTS)
 	$(AR) $(ARFLAGS) $@ $?
 
-NODE_LIBS=type/type.a
+NODE_LIBS=$(BDIR)/type/type.a

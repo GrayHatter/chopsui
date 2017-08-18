@@ -2,3 +2,4 @@
 *.a
 *.o
 test_*
+.build
