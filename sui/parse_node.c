@@ -178,7 +178,7 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 			// Parse inline children
 			break;
 		default:
-			push_attrib_parser(pstate, state, commit_attrib);
+			push_attr_parser(pstate, state, commit_attrib);
 			parser_push_ch(pstate, ch);
 			break;
 		}

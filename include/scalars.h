@@ -22,7 +22,7 @@ enum scalar_type {
 	SCALAR_KHZ,
 	SCALAR_COLOR,
 	SCALAR_BOOL,
-	SCALAR_CHAR,
+	SCALAR_STR,
 	SCALAR_VOID,
 };
 
