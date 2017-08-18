@@ -23,14 +23,13 @@ $(BDIR)/libchopsui.so: $(ARCHIVES)
 $(BDIR)/libchopsui.a: $(ARCHIVES)
 	$(AR) $(ARFLAGS) $@ $^
 
-all: $(BDIR)/libchopsui.so $(BDIR)/libchopsui.a
+tags: $(BDIR)/libchopsui.a
+	@find . -name "*.c" | xargs ctags || true
+
+all: $(BDIR)/libchopsui.so $(BDIR)/libchopsui.a tags
 
 clean:
 	rm -rf .build
-	find . -name "*.o" -delete
-	find . -name "*.a" -delete
-	find . -name "*.so" -delete
-	find test/ -type f -executable -delete
 
 include test/Makefile
 
