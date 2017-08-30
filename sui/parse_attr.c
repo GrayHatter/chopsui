@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h>
 #include "util/string.h"
 #include "node.h"
 #include "subparser.h"
@@ -18,13 +19,20 @@ struct attr_state {
 };
 
 static void commit_key(void *_state, const char *str) {
+	// TODO: validate characters used
 	struct attr_state *state = _state;
-	state->key = strdup(str);
+	if (str) {
+		state->key = strdup(str);
+	}
 }
 
 static void commit_val(void *_state, const char *str) {
 	struct attr_state *state = _state;
+	if (!str) {
+		parser_error(state->pstate, "Unspecified attribute value");
+	}
 	state->val = strdup(str);
+	parser_pop(state->pstate);
 }
 
 static void attr_state_free(void *_state) {
@@ -36,6 +44,7 @@ static void attr_state_free(void *_state) {
 			scalar->type = SCALAR_STR;
 			scalar->str = state->val;
 		}
+		printf("attr commit %s=%s\n", state->key, scalar->str);
 		state->commit(state->state, state->key, scalar);
 	}
 	free(state->key);
@@ -56,6 +65,7 @@ void parse_attr(struct parser_state *pstate, uint32_t ch) {
 		}
 	} else if (!state->key) {
 		push_string_parser(pstate, state, commit_key);
+		parser_push_ch(pstate, ch);
 	} else {
 		parser_push_ch(pstate, ch);
 		parser_pop(pstate);

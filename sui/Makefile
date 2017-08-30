@@ -5,7 +5,7 @@ OBJECTS=$(BDIR)/sui/sui_parse.o \
 		$(BDIR)/sui/sui_parse_ch.o \
 		$(BDIR)/sui/parse_node.o \
 		$(BDIR)/sui/parse_string.o \
-		$(BDIR)/sui/parse_attrib.o
+		$(BDIR)/sui/parse_attr.o
 
 $(BDIR)/sui/sui.a: $(OBJECTS)
 	$(AR) $(ARFLAGS) $@ $?
