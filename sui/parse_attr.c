@@ -55,7 +55,7 @@ void parse_attr(struct parser_state *pstate, uint32_t ch) {
 	struct subparser_state *subparser = list_peek(pstate->parsers);
 	struct attr_state *state = subparser->state;
 
-	if (isspace(ch)) {
+	if (isspace(ch) && ch != '\n') {
 		return;
 	} else if (ch == '=') {
 		if (!state->key) {

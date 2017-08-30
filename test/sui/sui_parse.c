@@ -7,7 +7,6 @@
 
 char *test_name = "sui/sui_parse";
 
-/*
 static int test_type() {
 	errors_t *errs = NULL;
 	struct sui_node *node = sui_parse("test", &errs);
@@ -113,7 +112,6 @@ static int test_indentation_errors() {
 
 	return 0;
 }
-*/
 
 static int test_attrs() {
 	errors_t *err = NULL;
@@ -139,18 +137,11 @@ static int test_attrs() {
 	assert(s);
 	assert(s->type == SCALAR_STR);
 	assert(strcmp(s->str, "bar") == 0);
-
-	n = node->children->items[2];
-	assert(n->attributes->bucket_count);
-	s = hashtable_get(n->attributes, "foo");
-	assert(s);
-	assert(s->type == SCALAR_STR);
-	assert(strcmp(s->str, "bar") == 0);
 	s = hashtable_get(n->attributes, "baz");
 	assert(s);
 	assert(s->type == SCALAR_EMPTY);
 
-	n = node->children->items[3];
+	n = node->children->items[2];
 	assert(n->attributes->bucket_count);
 	s = hashtable_get(n->attributes, "foo");
 	assert(s);
@@ -162,11 +153,11 @@ static int test_attrs() {
 }
 
 int test_main() {
-	return //test_type()
-		//|| test_class()
-		//|| test_id()
-		//|| test_children()
-		//|| test_indentation_errors()
-		/*|| */test_attrs()
+	return test_type()
+		|| test_class()
+		|| test_id()
+		|| test_children()
+		|| test_indentation_errors()
+		|| test_attrs()
 	;
 }
