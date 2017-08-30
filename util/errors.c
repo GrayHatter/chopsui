@@ -4,9 +4,9 @@
 #include "util/list.h"
 #include "util/errors.h"
 
-void append_error(errors_t **errs, const char *fmt, ...) {
+const char *append_error(errors_t **errs, const char *fmt, ...) {
 	if (!errs) {
-		return;
+		return NULL;
 	}
 
 	if (!*errs) {
@@ -24,6 +24,7 @@ void append_error(errors_t **errs, const char *fmt, ...) {
 	va_end(args);
 
 	list_add(*errs, buf);
+	return buf;
 }
 
 void errors_free(errors_t *errs) {

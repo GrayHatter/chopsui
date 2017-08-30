@@ -55,8 +55,7 @@ static int test_children() {
 	errors_t *errs = NULL;
 	struct sui_node *root = sui_parse(
 			"test\n"
-			"\tfoo\n"
-			"\tbar\n"
+			"\tfoo, bar\n"
 			"\t\tbaz\n"
 			"\t\t\tzab\n"
 			"\trab", &errs);

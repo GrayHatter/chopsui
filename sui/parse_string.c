@@ -73,7 +73,7 @@ void parse_string(struct parser_state *pstate, uint32_t ch) {
 		commit = ch == '\'';
 		break;
 	default:
-		commit = isspace(ch) || strchr(".@=[{}]", ch);
+		commit = isspace(ch) || strchr(".@=[{}],", ch);
 	}
 
 	if (commit) {

@@ -168,7 +168,12 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 				node_append_child(state->parent, state->node);
 			}
 			state->node = NULL;
-			state->depth = 0;
+			if (ch == ',') {
+				// We want to reuse depth in this case
+				subparser->flags |= FLAG_WHITESPACE;
+			} else {
+				state->depth = 0;
+			}
 			break;
 		case '.':
 			push_string_parser(pstate, state, commit_class);

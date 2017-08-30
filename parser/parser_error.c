@@ -28,8 +28,9 @@ void parser_error(struct parser_state *state, const char *fmt, ...) {
 	vsnprintf(buf, len + 1, fmt, args);
 	va_end(args);
 
-	append_error(state->errs, "[%d:%d] %s",
+	const char *err = append_error(state->errs, "[%d:%d] %s",
 			state->lineno, state->colno, buf);
+	parser_log(state, "%s", err);
 
 	if (len + 1 > 256) {
 		free(buf);

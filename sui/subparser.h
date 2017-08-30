@@ -7,6 +7,7 @@
 
 #define FLAG_COMMENTS 1
 #define FLAG_WAIT 2
+#define FLAG_WHITESPACE 4
 
 enum indent_type {
 	INDENT_UNKNOWN,
