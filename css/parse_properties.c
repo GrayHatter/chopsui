@@ -27,7 +27,8 @@ static void properties_state_free(void *_state) {
 
 struct subparser_state *push_properties(struct parser_state *state,
 		struct style_rule *style_rule) {
-	struct subparser_state *subparser = parser_push(state, parse_properties);
+	struct subparser_state *subparser = parser_push(
+			state, parse_properties, "css:props");
 	subparser->destructor = properties_state_free;
 	struct properties_state *pstate = calloc(sizeof(struct properties_state), 1);
 	pstate->style_rule = style_rule;

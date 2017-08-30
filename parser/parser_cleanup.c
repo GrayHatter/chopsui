@@ -4,15 +4,12 @@
 #include "parser.h"
 
 void parser_cleanup(struct parser_state *state) {
+	parser_log(state, "Terminating parser via parser_cleanup");
 	if (!state->parsers) {
 		return;
 	}
-	for (int i = state->parsers->length - 1; i >= 0; --i) {
-		struct subparser_state *s = state->parsers->items[i];
-		if (s->destructor) {
-			s->destructor(s->state);
-		}
-		free(s);
+	while (state->parsers->length) {
+		parser_pop(state);
 	}
 	list_free(state->parsers);
 }

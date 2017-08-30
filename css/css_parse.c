@@ -20,7 +20,7 @@ struct stylesheet *css_parse(const char *source, errors_t **errs) {
 	state.errs = errs;
 	state.data = css;
 	parser_init(&state, css_parse_ch);
-	parser_push(&state, parse_document);
+	parser_push(&state, parse_document, "css:document");
 
 	while (*source) {
 		uint32_t ch = utf8_decode(&source);

@@ -27,7 +27,7 @@ int css_parse_ch(struct parser_state *state, uint32_t ch) {
 			return PARSER_DEFER;
 		}
 		if (parser_peek_ch(state) == '*') {
-			parser_push(state, parse_comment);
+			parser_push(state, parse_comment, "css:comment");
 			parser_pop_ch(state);
 			return PARSER_SKIP;
 		}

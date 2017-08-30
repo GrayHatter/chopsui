@@ -44,7 +44,7 @@ static void attr_state_free(void *_state) {
 			scalar->type = SCALAR_STR;
 			scalar->str = state->val;
 		}
-		printf("attr commit %s=%s\n", state->key, scalar->str);
+		parser_log(state->pstate, "commit %s=%s", state->key, scalar->str);
 		state->commit(state->state, state->key, scalar);
 	}
 	free(state->key);
@@ -74,7 +74,8 @@ void parse_attr(struct parser_state *pstate, uint32_t ch) {
 
 struct subparser_state *push_attr_parser(struct parser_state *pstate,
 		void *state, void (*commit)(void *, const char *, void *)) {
-	struct subparser_state *subparser = parser_push(pstate, parse_attr);
+	struct subparser_state *subparser = parser_push(
+			pstate, parse_attr, "sui:attr");
 	subparser->destructor = attr_state_free;
 	struct attr_state *sstate = calloc(sizeof(struct attr_state), 1);
 	sstate->state = state;

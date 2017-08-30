@@ -29,14 +29,17 @@ struct subparser_state {
 	subparser_t parser;
 	void (*destructor)(void *state);
 	void *state;
+	const char *name;
 	uint32_t flags;
 	uint32_t wait;
 };
 
+
+void parser_log(struct parser_state *pstate, const char *fmt, ...);
 void parser_error(struct parser_state *state, const char *fmt, ...);
 void parser_cleanup(struct parser_state *state);
 struct subparser_state *parser_push(struct parser_state *state,
-		subparser_t parser);
+		subparser_t parser, const char *name);
 void parser_pop(struct parser_state *state);
 // Note: do not push characters that were never in the document
 void parser_push_ch(struct parser_state *state, uint32_t ch);

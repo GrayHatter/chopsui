@@ -1,6 +1,7 @@
 ARCHIVES+= $(BDIR)/parser/parser.a
 
-OBJECTS=$(BDIR)/parser/parser_error.o \
+OBJECTS=$(BDIR)/parser/parser_log.o \
+		$(BDIR)/parser/parser_error.o \
 		$(BDIR)/parser/push_parser.o \
 		$(BDIR)/parser/parser_pop.o \
 		$(BDIR)/parser/parser_push_ch.o \

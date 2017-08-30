@@ -6,6 +6,7 @@ int main(int argc, char **argv) {
 	printf("%s", test_name);
 	int dots = 50 - strlen(test_name);
 	while (dots--) putchar('.');
+	printf("\n"); // TEMP
 	int ret = test_main();
 	if (ret) {
 		printf("\033[31mFAIL\033[0m\n");

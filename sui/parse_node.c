@@ -19,13 +19,15 @@ static void node_state_free(void *_state) {
 	if (!state->node) return;
 	if (state->parent) {
 		node_append_child(state->parent, state->node);
+		parser_log(state->pstate, "committing node");
 	}
 	free(state);
 }
 
 struct subparser_state *push_node_parser(struct parser_state *pstate,
 		struct sui_node *parent) {
-	struct subparser_state *subp = parser_push(pstate, parse_node);
+	struct subparser_state *subp = parser_push(
+			pstate, parse_node, "sui:node");
 	struct node_state *state = calloc(sizeof(struct node_state), 1);
 	state->parent = parent;
 	state->pstate = pstate;
@@ -49,6 +51,7 @@ static void commit_type(void *_state, const char *str) {
 		parser_error(state->pstate, "Node cannot have two types");
 	} else {
 		state->node->type = strdup(str);
+		parser_log(state->pstate, "commit type='%s'", str);
 	}
 }
 
@@ -58,17 +61,20 @@ static void commit_id(void *_state, const char *str) {
 		parser_error(state->pstate, "Node cannot have two IDs");
 	} else {
 		state->node->id = strdup(str);
+		parser_log(state->pstate, "commit id='%s'", str);
 	}
 }
 
 static void commit_class(void *_state, const char *str) {
 	struct node_state *state = _state;
 	node_add_class(state->node, str);
+	parser_log(state->pstate, "commit class+='%s'", str);
 }
 
 static void commit_attrib(void *_state, const char *key, void *val) {
 	struct node_state *state = _state;
 	hashtable_set(state->node->attributes, key, val);
+	parser_log(state->pstate, "commit attribute '%s'", key);
 }
 
 void parse_node(struct parser_state *pstate, uint32_t ch) {
@@ -158,6 +164,7 @@ void parse_node(struct parser_state *pstate, uint32_t ch) {
 		case '\n':
 		case ',':
 			if (state->parent) {
+				parser_log(pstate, "committing node without pop");
 				node_append_child(state->parent, state->node);
 			}
 			state->node = NULL;
