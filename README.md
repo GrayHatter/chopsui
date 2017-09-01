@@ -21,11 +21,14 @@ See docs/example/ for an idea of what an example project could look like.
         button clicked=say_hi_clicked
           label text='Say hi'
         button [
+          # Square brackets allow attributes to span multiple lines.
           clicked=exit_clicked
           background='#FF0000'
-        ]
+        ] # There must be a line between the final attribute and the closing bracket.
           label text='Exit'
+        # Curly brackets allow children to be listed inline.
         button background='#eeeeee' clicked=add_thing_clicked { label text='Add Thing' }
+
     ```
 
 - SUI at runtime:
