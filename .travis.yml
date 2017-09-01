@@ -8,7 +8,7 @@ compiler:
 
 arch:
   packages:
-    - cmake
+    - gcc
   script:
     - make check
 
