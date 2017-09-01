@@ -7,6 +7,8 @@ compiler:
   - clang
 
 arch:
+  packages:
+    - cmake
   script:
     - make check
 

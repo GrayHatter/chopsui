@@ -1,0 +1,18 @@
+image: archlinux
+packages:
+  - cmake
+sources:
+  - https://git.sr.ht/~sircmpwn/chopsui
+tasks:
+  - setup: |
+      mkdir chopsui/build-{gcc,clang}
+      cd chopsui/build-gcc
+      CC=gcc cmake ..
+      cd ../build-clang
+      CC=clang cmake ..
+  - gcc: |
+      cd wlroots/build-gcc
+      make
+  - clang: |
+      cd wlroots/build-clang
+      make
